@@ -1,0 +1,15 @@
+// Cloudflare deploy settings: the game in web/ plus the leaderboard API in worker/index.js.
+{
+  "name": "lunarcade",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-09-01",
+  "assets": { "directory": "./web", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lunarcade",
+      // Paste the id printed by `npx wrangler d1 create lunarcade` here.
+      "database_id": "07f0e69e-20a5-4af2-914c-8e70a5728605"
+    }
+  ]
+}
