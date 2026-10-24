@@ -1,0 +1,10 @@
+{
+  "appId": "com.lunarcade.hub",
+  "appName": "LunarCade",
+  "webDir": "web",
+  "backgroundColor": "#171340",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  }
+}
