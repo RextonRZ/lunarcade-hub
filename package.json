@@ -1,0 +1,62 @@
+{
+  "name": "lunarcade",
+  "productName": "LunarCade",
+  "version": "2.9.7",
+  "description": "LUNARCADE HUB — a Moon science adventure with Nova.",
+  "private": true,
+  "main": "desktop/main.js",
+  "scripts": {
+    "import": "node tools/import-html.mjs",
+    "dev": "wrangler d1 execute lunarcade --local --file=worker/schema.sql && wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:setup": "wrangler d1 execute lunarcade --remote --file=worker/schema.sql",
+    "icons": "node tools/electron.mjs tools/make-icons.cjs",
+    "desktop": "node tools/electron.mjs .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "electron": "^45.0.0",
+    "electron-builder": "^26.0.0",
+    "wrangler": "^4.40.0"
+  },
+  "build": {
+    "appId": "com.lunarcade.hub",
+    "productName": "LunarCade",
+    "electronLanguages": [
+      "en-US",
+      "ms",
+      "zh-CN"
+    ],
+    "files": [
+      "desktop/**",
+      "web/**",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "desktop/build",
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "web/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "web/icon.png",
+      "category": "public.app-category.education"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "web/icon.png",
+      "category": "Education"
+    },
+    "publish": null
+  }
+}

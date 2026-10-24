@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+
+# Original single-file exports from ChatGPT (33 MB each). Keep them locally; web/ is what ships.
+/*.html
+/originals/
