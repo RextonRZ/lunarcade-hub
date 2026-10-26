@@ -40,3 +40,11 @@ CREATE TABLE IF NOT EXISTS review_loves (
   visitor     TEXT    NOT NULL,
   PRIMARY KEY (review_id, visitor)
 );
+
+-- Small key/value store for the server's own state, e.g. the last release GitHub reported, used
+-- when GitHub's API refuses the request.
+CREATE TABLE IF NOT EXISTS kv (
+  key         TEXT PRIMARY KEY,
+  value       TEXT NOT NULL,
+  updated_at  INTEGER NOT NULL
+);

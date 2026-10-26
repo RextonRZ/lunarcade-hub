@@ -151,35 +151,59 @@ async function loveReview(id, request, env) {
 
 // Installers are too big for Cloudflare's 25 MB asset limit, so they live on GitHub Releases.
 // /download/<platform> always points at the newest one, and /api/release tells the download page
-// which version and sizes to show. GitHub is asked at most once every 10 minutes.
+// which version and sizes to show. GitHub's API refuses Cloudflare's shared addresses, so this reads
+// its plain web addresses instead: /releases/latest redirects to the newest tag, and each installer's
+// download address reports its size. Files follow electron-builder's names (LunarCade-2.9.7-windows.exe).
+// Answers are cached for 10 minutes, and the last good one is kept in D1 for when GitHub is unreachable.
 const RELEASES = 'https://github.com/RextonRZ/lunarcade-hub/releases';
-const LATEST_RELEASE_API = 'https://api.github.com/repos/RextonRZ/lunarcade-hub/releases/latest';
-const PLATFORM_FILES = { windows: /-windows\.exe$/, android: /-android\.apk$/, mac: /-mac\.dmg$/ };
+const PLATFORM_FILES = { windows: 'windows.exe', android: 'android.apk', mac: 'mac.dmg' };
 
-async function latestRelease(ctx) {
+async function fetchRelease() {
+  const headers = { 'User-Agent': 'lunarcade-worker' };
+  const latest = await fetch(RELEASES + '/latest', { redirect: 'manual', headers });
+  const tag = (latest.headers.get('Location') || '').match(/\/tag\/([^/?#]+)/)?.[1];
+  if (!tag) throw new Error('GitHub gave no latest tag (' + latest.status + ')');
+  const version = decodeURIComponent(tag).replace(/^v/, '');
+  const files = {};
+  await Promise.all(Object.entries(PLATFORM_FILES).map(async ([platform, suffix]) => {
+    const name = `LunarCade-${version}-${suffix}`;
+    const url = `${RELEASES}/download/${tag}/${name}`;
+    const res = await fetch(url, { method: 'HEAD', headers });
+    if (res.ok) files[platform] = { name, size: Number(res.headers.get('Content-Length')) || null, url };
+  }));
+  return { version, files };
+}
+
+async function latestRelease(env, ctx) {
   const cache = caches.default;
   const key = new Request('https://lunarcade.internal/latest-release');
   const cached = await cache.match(key);
   if (cached) return cached.json();
-  const res = await fetch(LATEST_RELEASE_API, {
-    headers: { 'User-Agent': 'lunarcade-worker', Accept: 'application/vnd.github+json' },
-  });
-  if (!res.ok) throw new Error('GitHub answered ' + res.status);
-  const release = await res.json();
-  const files = {};
-  for (const [platform, pattern] of Object.entries(PLATFORM_FILES)) {
-    const asset = release.assets.find((a) => pattern.test(a.name));
-    if (asset) files[platform] = { name: asset.name, size: asset.size, url: asset.browser_download_url };
+  const remember = (info, seconds) =>
+    ctx.waitUntil(cache.put(key, new Response(JSON.stringify(info), { headers: { 'Cache-Control': 'max-age=' + seconds } })));
+  try {
+    const info = await fetchRelease();
+    remember(info, 600);
+    ctx.waitUntil(
+      env.DB.prepare(`INSERT INTO kv (key, value, updated_at) VALUES ('latest-release', ?1, ?2)
+        ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`)
+        .bind(JSON.stringify(info), Date.now()).run()
+    );
+    return info;
+  } catch (e) {
+    const saved = await env.DB.prepare(`SELECT value FROM kv WHERE key = 'latest-release'`).first();
+    if (!saved) throw e;
+    console.warn('Using the saved release: ' + e.message);
+    const info = JSON.parse(saved.value);
+    remember(info, 120);
+    return info;
   }
-  const info = { version: release.tag_name.replace(/^v/, ''), publishedAt: release.published_at, files };
-  ctx.waitUntil(cache.put(key, new Response(JSON.stringify(info), { headers: { 'Cache-Control': 'max-age=600' } })));
-  return info;
 }
 
-async function download(platform, ctx) {
+async function download(platform, env, ctx) {
   let target = RELEASES + '/latest';
   try {
-    target = (await latestRelease(ctx)).files[platform]?.url || target;
+    target = (await latestRelease(env, ctx)).files[platform]?.url || target;
   } catch (e) {
     console.error(e);
   }
@@ -190,11 +214,11 @@ export default {
   async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
     const platform = pathname.match(/^\/download\/(windows|android|mac)\/?$/)?.[1];
-    if (platform) return download(platform, ctx);
+    if (platform) return download(platform, env, ctx);
     if (!pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
     try {
-      if (pathname === '/api/release' && request.method === 'GET') return json(await latestRelease(ctx));
+      if (pathname === '/api/release' && request.method === 'GET') return json(await latestRelease(env, ctx));
       if (pathname === '/api/reviews' && request.method === 'GET') return await listReviews(env);
       if (pathname === '/api/reviews' && request.method === 'POST') return await postReview(request, env);
       const loveId = pathname.match(/^\/api\/reviews\/(\d+)\/love$/)?.[1];

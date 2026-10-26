@@ -135,7 +135,7 @@
     $$('[data-version]').forEach((el) => (el.textContent = 'Version ' + release.version));
     $$('[data-version-num]').forEach((el) => (el.textContent = release.version));
     for (const [platform, file] of Object.entries(release.files || {})) {
-      $$(`[data-size="${platform}"]`).forEach((el) => (el.textContent = mb(file.size)));
+      if (file.size) $$(`[data-size="${platform}"]`).forEach((el) => (el.textContent = mb(file.size)));
       $$(`[data-file="${platform}"]`).forEach((el) => (el.textContent = file.name));
     }
     if (release.files && release.files.mac) $('.get-mac').hidden = false;
