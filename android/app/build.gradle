@@ -1,5 +1,19 @@
 apply plugin: 'com.android.application'
 
+import groovy.json.JsonSlurper
+
+// One version number for every platform: package.json. 2.9.7 becomes versionCode 20907, so each
+// release installs over the last one.
+def appVersion = new JsonSlurper().parse(rootProject.file('../package.json')).version
+def versionParts = appVersion.tokenize('.').collect { it.toInteger() }
+def appVersionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
+
+// The permanent release key lives outside the repo. Locally: ~/.lunarcade-keys/keystore.properties.
+// On GitHub Actions the release workflow writes that file from repository secrets.
+def keyProps = new Properties()
+def keyPropsFile = file(System.getenv('LUNARCADE_KEYSTORE_PROPERTIES') ?: "${System.getProperty('user.home')}/.lunarcade-keys/keystore.properties")
+if (keyPropsFile.exists()) keyPropsFile.withInputStream { keyProps.load(it) }
+
 android {
     namespace = "com.lunarcade.hub"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +21,8 @@ android {
         applicationId "com.lunarcade.hub"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +30,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keyProps.storeFile) {
+                storeFile file(keyProps.storeFile)
+                storePassword keyProps.storePassword
+                keyAlias keyProps.keyAlias
+                keyPassword keyProps.keyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            if (keyProps.storeFile) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

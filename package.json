@@ -33,7 +33,8 @@
     "files": [
       "desktop/**",
       "web/**",
-      "package.json"
+      "package.json",
+      "!web/download/**"
     ],
     "directories": {
       "buildResources": "desktop/build",
@@ -41,7 +42,8 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "web/icon.png"
+      "icon": "web/icon.png",
+      "artifactName": "LunarCade-${version}-windows.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -50,7 +52,8 @@
     "mac": {
       "target": "dmg",
       "icon": "web/icon.png",
-      "category": "public.app-category.education"
+      "category": "public.app-category.education",
+      "artifactName": "LunarCade-${version}-mac.${ext}"
     },
     "linux": {
       "target": "AppImage",
