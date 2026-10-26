@@ -26,8 +26,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
-  // Leaderboard calls always go to the network.
-  if (event.request.method !== 'GET' || url.origin !== location.origin || url.pathname.startsWith('/api/')) return;
+  // Leaderboard calls, the download page and installer downloads always go to the network.
+  if (event.request.method !== 'GET' || url.origin !== location.origin || /^\/(api|download)\//.test(url.pathname + '/')) return;
   if (/\/assets\/(audio|music)\//.test(url.pathname)) event.respondWith(media(event));
   else if (url.pathname.includes('/assets/fonts/')) event.respondWith(font(event.request));
   else event.respondWith(page(event.request));

@@ -83,12 +83,122 @@ async function leaderboard(env) {
   return json({ records });
 }
 
+// Reviews on the download page. Children may read them, so text is short, link-free and filtered,
+// each visitor may post three a day, and the owner can hide one (see worker/schema.sql).
+const REVIEW_ROLES = ['parent', 'teacher', 'pupil', 'other'];
+const REVIEWS_SHOWN = 60;
+const REVIEWS_PER_DAY = 3;
+const BLOCKED_WORDS = /\b(fuck\w*|shit\w*|bitch\w*|cunt|dick|pussy|bastard|asshole|slut|whore|nigg\w*|babi|bodoh|sial|celaka|pukimak|puki|lancau|pantat|kimak|haram\s?jadah|bangsat|anjing|keparat)\b/i;
+const LINKS = /(https?:\/\/|www\.|\b[\w-]+\.(com|net|org|my|io|xyz|ru|cn)\b)/i;
+
+async function visitorId(request) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'local';
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('lunarcade-reviews:' + ip));
+  return [...new Uint8Array(digest)].slice(0, 16).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function listReviews(env) {
+  const { results } = await env.DB.prepare(
+    `SELECT id, name, role, hearts, body, loves, created_at FROM reviews WHERE hidden = 0 ORDER BY created_at DESC LIMIT ?1`
+  ).bind(REVIEWS_SHOWN).all();
+  const totals = await env.DB.prepare(`SELECT COUNT(*) AS count, AVG(hearts) AS average FROM reviews WHERE hidden = 0`).first();
+  return json({
+    count: totals.count,
+    average: totals.count ? Math.round(totals.average * 10) / 10 : null,
+    reviews: results.map((r) => ({ id: r.id, name: r.name, role: r.role, hearts: r.hearts, body: r.body, loves: r.loves, createdAt: r.created_at })),
+  });
+}
+
+async function postReview(request, env) {
+  let input;
+  try {
+    input = await request.json();
+  } catch {}
+  const name = cleanName(input?.name);
+  const body = typeof input?.body === 'string' ? input.body.normalize('NFKC').replace(/\s+/g, ' ').trim() : '';
+  const role = REVIEW_ROLES.includes(input?.role) ? input.role : null;
+  const hearts = Number.isInteger(input?.hearts) && input.hearts >= 1 && input.hearts <= 5 ? input.hearts : null;
+  if (!validName(name)) return json({ error: 'name', message: 'Please use a nickname of up to 20 characters.' }, 400);
+  if (!role || !hearts) return json({ error: 'fields', message: 'Please choose who you are and how many hearts.' }, 400);
+  if (Array.from(body).length < 10 || Array.from(body).length > 300) {
+    return json({ error: 'length', message: 'Reviews need 10 to 300 characters.' }, 400);
+  }
+  if (LINKS.test(body) || LINKS.test(name)) return json({ error: 'links', message: 'Links are not allowed in reviews.' }, 400);
+  if (BLOCKED_WORDS.test(body) || BLOCKED_WORDS.test(name)) {
+    return json({ error: 'words', message: 'Please keep it friendly. Pupils read these reviews too.' }, 400);
+  }
+  const visitor = await visitorId(request);
+  const now = Date.now();
+  const recent = await env.DB.prepare(`SELECT COUNT(*) AS n FROM reviews WHERE visitor = ?1 AND created_at > ?2`)
+    .bind(visitor, now - 864e5).first();
+  if (recent.n >= REVIEWS_PER_DAY) return json({ error: 'limit', message: 'Thanks! You can post again tomorrow.' }, 429);
+  const row = await env.DB.prepare(
+    `INSERT INTO reviews (name, role, hearts, body, visitor, created_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6) RETURNING id`
+  ).bind(name, role, hearts, body, visitor, now).first();
+  return json({ review: { id: row.id, name, role, hearts, body, loves: 0, createdAt: now } }, 201);
+}
+
+async function loveReview(id, request, env) {
+  const visitor = await visitorId(request);
+  const added = await env.DB.prepare(
+    `INSERT OR IGNORE INTO review_loves (review_id, visitor) SELECT id, ?2 FROM reviews WHERE id = ?1 AND hidden = 0`
+  ).bind(id, visitor).run();
+  if (added.meta.changes) await env.DB.prepare(`UPDATE reviews SET loves = loves + 1 WHERE id = ?1`).bind(id).run();
+  const row = await env.DB.prepare(`SELECT loves FROM reviews WHERE id = ?1 AND hidden = 0`).bind(id).first();
+  if (!row) return json({ error: 'not found' }, 404);
+  return json({ loves: row.loves, loved: true });
+}
+
+// Installers are too big for Cloudflare's 25 MB asset limit, so they live on GitHub Releases.
+// /download/<platform> always points at the newest one, and /api/release tells the download page
+// which version and sizes to show. GitHub is asked at most once every 10 minutes.
+const RELEASES = 'https://github.com/RextonRZ/lunarcade-hub/releases';
+const LATEST_RELEASE_API = 'https://api.github.com/repos/RextonRZ/lunarcade-hub/releases/latest';
+const PLATFORM_FILES = { windows: /-windows\.exe$/, android: /-android\.apk$/, mac: /-mac\.dmg$/ };
+
+async function latestRelease(ctx) {
+  const cache = caches.default;
+  const key = new Request('https://lunarcade.internal/latest-release');
+  const cached = await cache.match(key);
+  if (cached) return cached.json();
+  const res = await fetch(LATEST_RELEASE_API, {
+    headers: { 'User-Agent': 'lunarcade-worker', Accept: 'application/vnd.github+json' },
+  });
+  if (!res.ok) throw new Error('GitHub answered ' + res.status);
+  const release = await res.json();
+  const files = {};
+  for (const [platform, pattern] of Object.entries(PLATFORM_FILES)) {
+    const asset = release.assets.find((a) => pattern.test(a.name));
+    if (asset) files[platform] = { name: asset.name, size: asset.size, url: asset.browser_download_url };
+  }
+  const info = { version: release.tag_name.replace(/^v/, ''), publishedAt: release.published_at, files };
+  ctx.waitUntil(cache.put(key, new Response(JSON.stringify(info), { headers: { 'Cache-Control': 'max-age=600' } })));
+  return info;
+}
+
+async function download(platform, ctx) {
+  let target = RELEASES + '/latest';
+  try {
+    target = (await latestRelease(ctx)).files[platform]?.url || target;
+  } catch (e) {
+    console.error(e);
+  }
+  return Response.redirect(target, 302);
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
+    const platform = pathname.match(/^\/download\/(windows|android|mac)\/?$/)?.[1];
+    if (platform) return download(platform, ctx);
     if (!pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
     try {
+      if (pathname === '/api/release' && request.method === 'GET') return json(await latestRelease(ctx));
+      if (pathname === '/api/reviews' && request.method === 'GET') return await listReviews(env);
+      if (pathname === '/api/reviews' && request.method === 'POST') return await postReview(request, env);
+      const loveId = pathname.match(/^\/api\/reviews\/(\d+)\/love$/)?.[1];
+      if (loveId && request.method === 'POST') return await loveReview(Number(loveId), request, env);
       if (pathname === '/api/leaderboard' && request.method === 'GET') return await leaderboard(env);
       if (pathname === '/api/score' && request.method === 'POST') return await submit(request, env);
       return json({ error: 'not found' }, 404);
