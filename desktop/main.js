@@ -9,8 +9,10 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
-    minWidth: 800,
-    minHeight: 500,
+    // The game's smallest layout; below this it would only show a "rotate your device" notice.
+    minWidth: 900,
+    minHeight: 520,
+    useContentSize: true,
     title: 'LunarCade',
     backgroundColor: '#171340',
     icon: path.join(__dirname, '..', 'web', 'icon.png'),
@@ -18,7 +20,7 @@ function createWindow() {
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   win.removeMenu();
-  win.loadFile(path.join(__dirname, '..', 'web', 'index.html'));
+  win.loadFile(path.join(__dirname, '..', 'web', 'game.html'));
 
   // Links to other sites open in the normal browser, never inside the game window.
   win.webContents.setWindowOpenHandler(({ url }) => {
