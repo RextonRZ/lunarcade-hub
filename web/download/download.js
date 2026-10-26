@@ -1,5 +1,6 @@
-// Download page behaviour: the Moon follows the scroll through the month, the downloads show the
-// latest release, and reviews load, post and collect loves.
+// Download page behaviour: the Moon runs through the month (on its own at the top, with the scroll
+// after that), screenshots sit in carousels with a full-size viewer, the downloads show the latest
+// release, and reviews load, post and collect loves.
 (function () {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -7,7 +8,14 @@
   const chapters = $$('.chapter');
   const days = chapters.map((c) => Number(c.dataset.day));
 
-  // ---- The month: chapter positions set the Moon's day; a spring smooths the scroll.
+  // ---- The month.
+  // At the top of the page the Moon plays the month like a time-lapse, about 24 seconds a cycle.
+  // Once the visitor scrolls, the scroll takes over and each chapter is one phase. A spring eases
+  // between the two, always the short way round the cycle, so it never spins back through every phase.
+  const CYCLE = 29.53;
+  const TIMELAPSE = CYCLE / 24; // days per second
+  const wrap = (d) => ((((d - 1) % CYCLE) + CYCLE) % CYCLE) + 1;
+  const towards = (from, to) => { const x = to - from; return x - CYCLE * Math.round(x / CYCLE); };
   const moon = window.LunarMoon.create($('#moon'), 'img/moon-lroc-2k.webp');
   const dayEl = $('#day-number'), litEl = $('#day-lit'), phaseEl = $('#phase-name'), factEl = $('#phase-fact');
   const track = $('.phases');
@@ -15,6 +23,7 @@
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
+    button.dataset.label = chapter.dataset.phase;
     button.setAttribute('aria-label', `${chapter.dataset.phase}, day ${Math.floor(days[i])}`);
     const icon = document.createElement('canvas');
     icon.width = icon.height = 36;
@@ -25,33 +34,34 @@
     track.append(li);
     return button;
   });
+  // Tooltips: the first one waits, then neighbours open instantly while the pointer stays on the row.
+  let warmTimer = 0;
+  track.addEventListener('pointerover', () => { clearTimeout(warmTimer); warmTimer = setTimeout(() => track.classList.add('warm'), 300); });
+  track.addEventListener('pointerleave', () => { clearTimeout(warmTimer); warmTimer = setTimeout(() => track.classList.remove('warm'), 400); });
 
-  let target = 1, shown = 1, current = -1, last = performance.now();
+  let target = 1, shown = 1, current = -1, last = performance.now(), timelapse = true;
   // The Windows card is lit by the Moon: its glow follows how much of the disc is lit.
   const getMain = $('.get-main');
   let getLit = -1;
   function measure() {
-    // Each chapter owns the scroll span from where its top reaches the reading line to where the
-    // next one does. The first span starts at the very top, so the page opens on Day 1, New Moon.
+    timelapse = scrollY < Math.min(innerHeight * 0.15, 140);
+    // Each chapter owns the scroll span from where its top reaches the reading line to where the next
+    // one does, holding its own phase for the first part (Full Moon longest, for the downloads).
     const line = innerHeight * 0.45;
     const tops = chapters.map((c) => c.getBoundingClientRect().top);
     const starts = tops.map((t, j) => (j === 0 ? 0 : Math.max(0, t + scrollY - line)));
     let i = 0;
     while (i < starts.length - 1 && starts[i + 1] <= scrollY) i++;
     if (i < starts.length - 1) {
-      // Each chapter holds its own phase while it is read, then moves on; Full Moon holds longest so it
-      // is still full when the visitor reaches the download buttons.
       const hold = chapters[i].id === 'full-moon' ? 0.6 : 0.35;
       const frac = (scrollY - starts[i]) / Math.max(1, starts[i + 1] - starts[i]);
       target = days[i] + Math.max(0, (frac - hold) / (1 - hold)) * (days[i + 1] - days[i]);
-    }
-    else {
+    } else {
       // After the last chapter the Moon fades towards the next new Moon.
       const end = document.documentElement.scrollHeight - scrollY - innerHeight;
       const span = Math.max(1, chapters[i].offsetHeight - innerHeight * 0.3);
       target = days[i] + Math.min(1, Math.max(0, 1 - end / span)) * (29.2 - days[i]);
     }
-    for (const [j, c] of chapters.entries()) c.classList.toggle('dim', tops[j] > innerHeight * 0.88);
   }
   function setChapter(i) {
     const first = current === -1;
@@ -70,23 +80,27 @@
       show();
       phaseEl.classList.remove('swap');
       factEl.classList.remove('swap');
-    }, 200);
+    }, 180);
   }
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now;
-    shown = reduceMotion.matches ? target : shown + (target - shown) * (1 - Math.exp(-dt * 5));
-    if (Math.abs(target - shown) < 0.002) shown = target;
+    if (reduceMotion.matches) shown = timelapse ? 1 : target;
+    else if (timelapse) shown = wrap(shown + dt * TIMELAPSE);
+    else {
+      const gap = towards(shown, target);
+      shown = Math.abs(gap) < 0.002 ? target : wrap(shown + gap * (1 - Math.exp(-dt * 5)));
+    }
     moon.setDay(shown);
     moon.render(now, reduceMotion.matches);
     const a = window.LunarMoon.phaseAngle(shown);
     // The phase name follows the Moon on screen, not the chapter, so the two never disagree.
-    const nearest = days.reduce((best, d, j) => (Math.abs(d - shown) < Math.abs(days[best] - shown) ? j : best), 0);
+    const nearest = days.reduce((best, d, j) => (Math.abs(towards(shown, d)) < Math.abs(towards(shown, days[best])) ? j : best), 0);
     if (nearest !== current) setChapter(nearest);
     const lit = 0.5 - 0.5 * Math.cos(a);
     if (getMain && Math.abs(lit - getLit) > 0.01) { getLit = lit; getMain.style.setProperty('--lit', (lit * lit).toFixed(3)); }
-    dayEl.textContent = 'Day ' + Math.max(1, Math.min(29, Math.round(shown)));
-    litEl.textContent = Math.round((0.5 - 0.5 * Math.cos(a)) * 100) + '% lit';
+    dayEl.textContent = 'Day ' + Math.min(30, Math.max(1, Math.round(shown)));
+    litEl.textContent = Math.round(lit * 100) + '% lit';
     requestAnimationFrame(frame);
   }
   addEventListener('scroll', measure, { passive: true });
@@ -94,11 +108,123 @@
   measure();
   requestAnimationFrame(frame);
 
-  // Screenshots unroll the first time they come into view.
-  const seen = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('seen'); seen.unobserve(e.target); }
-  }, { rootMargin: '0px 0px -12% 0px' });
-  $$('.shots').forEach((s) => seen.observe(s));
+  // ---- Entrances: the hero rises once on load; later copy rises once as it scrolls into view.
+  $$('.chapter-hero > *').forEach((el, i) => el.style.setProperty('--i', i));
+  const reveal = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); }
+  }, { rootMargin: '0px 0px -8% 0px' });
+  for (const chapter of chapters.slice(1)) {
+    [...chapter.children].forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.setProperty('--i', Math.min(i, 4));
+      reveal.observe(el);
+    });
+  }
+
+  // ---- Screenshot carousels: swipe, arrows or dots; the current slide opens full size.
+  const viewer = $('#viewer'), viewerImg = $('#viewer-img'), viewerCap = $('#viewer-cap');
+  let viewerSlides = [], viewerIndex = 0, viewerReel = null;
+  const smooth = () => (reduceMotion.matches ? 'auto' : 'smooth');
+  for (const reel of $$('.reel')) {
+    const trackEl = $('.reel-track', reel);
+    const slides = $$('.slide', reel);
+    let cur = 0;
+    const bar = document.createElement('div');
+    bar.className = 'reel-bar';
+    bar.innerHTML = `<p class="reel-count" aria-hidden="true"><b>1</b> / ${slides.length}</p><div class="reel-dots"></div>
+      <button class="reel-btn" type="button" data-dir="-1" aria-label="Previous screen"><svg><use href="#i-prev"/></svg></button>
+      <button class="reel-btn" type="button" data-dir="1" aria-label="Next screen"><svg><use href="#i-next"/></svg></button>`;
+    reel.append(bar);
+    const dots = slides.map((slide, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Screen ${i + 1}: ${$('figcaption', slide).textContent}`);
+      dot.addEventListener('click', () => go(i));
+      $('.reel-dots', bar).append(dot);
+      return dot;
+    });
+    const [prev, next] = $$('.reel-btn', bar);
+    prev.addEventListener('click', () => go(cur - 1));
+    next.addEventListener('click', () => go(cur + 1));
+    slides.forEach((slide, i) => {
+      const img = $('img', slide);
+      const open = document.createElement('button');
+      open.type = 'button';
+      open.className = 'slide-open';
+      open.setAttribute('aria-label', 'View larger: ' + img.alt);
+      img.replaceWith(open);
+      open.append(img);
+      open.insertAdjacentHTML('beforeend', '<span class="expand" aria-hidden="true"><svg><use href="#i-expand"/></svg></span>');
+      open.addEventListener('click', () => (i === cur ? openViewer(slides, i, go) : go(i)));
+    });
+    function step() { return slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : 1; }
+    function go(i) {
+      i = Math.max(0, Math.min(slides.length - 1, i));
+      trackEl.scrollTo({ left: Math.min(i * step(), trackEl.scrollWidth - trackEl.clientWidth), behavior: smooth() });
+      setCurrent(i);
+    }
+    function setCurrent(i) {
+      cur = i;
+      slides.forEach((s, j) => s.classList.toggle('is-current', j === i));
+      dots.forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
+      $('.reel-count b', bar).textContent = i + 1;
+      prev.disabled = i === 0;
+      next.disabled = i === slides.length - 1;
+    }
+    let ticking = false;
+    trackEl.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const atEnd = trackEl.scrollLeft >= trackEl.scrollWidth - trackEl.clientWidth - 4;
+        const i = atEnd ? slides.length - 1 : Math.round(trackEl.scrollLeft / step());
+        if (i !== cur) setCurrent(i);
+      });
+    }, { passive: true });
+    trackEl.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    });
+    setCurrent(0);
+  }
+
+  function openViewer(slides, i, go) {
+    viewerSlides = slides;
+    viewerReel = go;
+    showInViewer(i, false);
+    viewer.showModal();
+  }
+  function showInViewer(i, animate) {
+    viewerIndex = (i + viewerSlides.length) % viewerSlides.length;
+    const img = $('img', viewerSlides[viewerIndex]);
+    const set = () => {
+      viewerImg.src = img.currentSrc || img.src;
+      viewerImg.alt = img.alt;
+      viewerCap.textContent = $('figcaption', viewerSlides[viewerIndex]).textContent;
+    };
+    if (!animate || reduceMotion.matches) return set();
+    viewerImg.classList.add('swap');
+    setTimeout(() => {
+      set();
+      viewerImg.decode().catch(() => {}).finally(() => viewerImg.classList.remove('swap'));
+    }, 120);
+  }
+  function closeViewer() {
+    if (viewerReel) viewerReel(viewerIndex);
+    if (reduceMotion.matches) return viewer.close();
+    viewer.classList.add('closing');
+    setTimeout(() => { viewer.close(); viewer.classList.remove('closing'); }, 150);
+  }
+  $('.viewer-prev').addEventListener('click', () => showInViewer(viewerIndex - 1, true));
+  $('.viewer-next').addEventListener('click', () => showInViewer(viewerIndex + 1, true));
+  $('.viewer-close').addEventListener('click', closeViewer);
+  viewer.addEventListener('cancel', (e) => { e.preventDefault(); closeViewer(); });
+  viewer.addEventListener('click', (e) => { if (e.target === viewer) closeViewer(); });
+  viewer.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') showInViewer(viewerIndex + 1, true);
+    if (e.key === 'ArrowLeft') showInViewer(viewerIndex - 1, true);
+  });
 
   // ---- The visitor's own device gets the gold button: Android sees the APK first, iPhone and iPad see
   // Play online first (iOS cannot install either app), everyone else sees Windows first.
@@ -190,6 +316,8 @@
       saveLoved();
       r.loves += 1;
       love.setAttribute('aria-pressed', 'true');
+      love.classList.add('pop');
+      love.addEventListener('animationend', () => love.classList.remove('pop'), { once: true });
       love.querySelector('span').textContent = r.loves;
       fetch(`/api/reviews/${r.id}/love`, { method: 'POST' })
         .then((res) => (res.ok ? res.json() : null))
