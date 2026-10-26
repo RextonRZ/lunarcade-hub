@@ -5,6 +5,9 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const L = window.LC_I18N;
+  const t = L.t;
+  L.apply();
   const chapters = $$('.chapter');
   const days = chapters.map((c) => Number(c.dataset.day));
 
@@ -23,13 +26,23 @@
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.dataset.label = chapter.dataset.phase;
-    button.setAttribute('aria-label', `${chapter.dataset.phase}, day ${Math.floor(days[i])}`);
+    const label = () => {
+      button.dataset.label = L.phase(i);
+      button.setAttribute('aria-label', L.phase(i) + ', ' + t('day', { n: Math.floor(days[i]) }));
+    };
+    label();
+    document.addEventListener('lc:lang', label);
     const icon = document.createElement('canvas');
     icon.width = icon.height = 36;
     window.LunarMoon.drawPhase(icon.getContext('2d'), 36, days[i], '#e9e6df', '#2a2d4a');
     button.append(icon);
-    button.addEventListener('click', () => chapter.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' }));
+    // A dot shows its phase on the Moon right here; the page itself does not move.
+    button.addEventListener('click', () => {
+      preview = days[i];
+      previewAt = scrollY;
+      previewUntil = performance.now() + 8000;
+      timelapse = false;
+    });
     li.append(button);
     track.append(li);
     return button;
@@ -40,11 +53,15 @@
   track.addEventListener('pointerleave', () => { clearTimeout(warmTimer); warmTimer = setTimeout(() => track.classList.remove('warm'), 400); });
 
   let target = 1, shown = 1, current = -1, last = performance.now(), timelapse = true;
+  // A phase picked from the dots holds until the visitor scrolls on.
+  // At the top of the page the time-lapse picks up again 8 seconds later.
+  let preview = null, previewAt = 0, previewUntil = 0;
   // The Windows card is lit by the Moon: its glow follows how much of the disc is lit.
   const getMain = $('.get-main');
   let getLit = -1;
   function measure() {
-    timelapse = scrollY < Math.min(innerHeight * 0.15, 140);
+    if (preview !== null && Math.abs(scrollY - previewAt) > 60) preview = null;
+    timelapse = preview === null && scrollY < Math.min(innerHeight * 0.15, 140);
     // Each chapter owns the scroll span from where its top reaches the reading line to where the next
     // one does, holding its own phase for the first part (Full Moon longest, for the downloads).
     const line = innerHeight * 0.45;
@@ -68,8 +85,8 @@
     current = i;
     trackButtons.forEach((b, j) => b.setAttribute('aria-current', String(j === i)));
     const show = () => {
-      phaseEl.textContent = chapters[i].dataset.phase;
-      factEl.textContent = chapters[i].dataset.fact;
+      phaseEl.textContent = L.phase(i);
+      factEl.textContent = L.fact(i);
     };
     if (first || reduceMotion.matches) return show();
     // The name and its sentence blur out, change and come back together, so they never disagree.
@@ -85,30 +102,106 @@
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now;
-    if (reduceMotion.matches) shown = timelapse ? 1 : target;
+    if (preview !== null && now > previewUntil && scrollY < Math.min(innerHeight * 0.15, 140)) { preview = null; measure(); }
+    const goal = preview !== null ? preview : target;
+    if (reduceMotion.matches) shown = preview !== null ? preview : timelapse ? 1 : target;
     else if (timelapse) shown = wrap(shown + dt * TIMELAPSE);
     else {
-      const gap = towards(shown, target);
-      shown = Math.abs(gap) < 0.002 ? target : wrap(shown + gap * (1 - Math.exp(-dt * 5)));
+      const gap = towards(shown, goal);
+      shown = Math.abs(gap) < 0.002 ? goal : wrap(shown + gap * (1 - Math.exp(-dt * 5)));
     }
     moon.setDay(shown);
     moon.render(now, reduceMotion.matches);
+    moveNova(now, dt);
     const a = window.LunarMoon.phaseAngle(shown);
     // The phase name follows the Moon on screen, not the chapter, so the two never disagree.
     const nearest = days.reduce((best, d, j) => (Math.abs(towards(shown, d)) < Math.abs(towards(shown, days[best])) ? j : best), 0);
     if (nearest !== current) setChapter(nearest);
     const lit = 0.5 - 0.5 * Math.cos(a);
     if (getMain && Math.abs(lit - getLit) > 0.01) { getLit = lit; getMain.style.setProperty('--lit', (lit * lit).toFixed(3)); }
-    dayEl.textContent = 'Day ' + Math.min(30, Math.max(1, Math.round(shown)));
-    litEl.textContent = Math.round(lit * 100) + '% lit';
+    dayEl.textContent = t('day', { n: Math.min(30, Math.max(1, Math.round(shown))) });
+    litEl.textContent = t('lit', { p: Math.round(lit * 100) });
     requestAnimationFrame(frame);
   }
+  // ---- Nova orbits the Moon on a tilted ellipse, passing behind it (smaller, dimmed) and back in
+  // front, and every few seconds does a trick: a somersault, a hop, a turn, a dash or a wiggle.
+  // Scrolling makes Nova zoom faster. With reduced motion Nova stays put.
+  const nova = $('.nova');
+  const frameEl = $('.moon-frame');
+  const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  const TRICKS = {
+    flip: { dur: 1100, apply: (k, p) => { p.rot += 360 * easeInOut(k); } },
+    hop: { dur: 800, apply: (k, p) => { p.y -= p.F * 0.16 * Math.sin(Math.PI * k); p.sy *= 1 + 0.08 * Math.sin(Math.PI * k); } },
+    turn: { dur: 1000, apply: (k, p) => { p.sx *= Math.cos(2 * Math.PI * easeInOut(k)); } },
+    dash: { dur: 1400, apply: (k, p) => { p.boost += 5 * Math.sin(Math.PI * k); p.rot += 14 * Math.sin(Math.PI * k); } },
+    wiggle: { dur: 900, apply: (k, p) => { p.rot += 14 * Math.sin(6 * Math.PI * k) * (1 - k); } },
+  };
+  const trickNames = Object.keys(TRICKS);
+  let orbit = 0.9, trick = null, nextTrick = performance.now() + 2500, lastY = scrollY, scrollBoost = 0, lastTrick = '';
+  function moveNova(now, dt) {
+    if (!nova || reduceMotion.matches || !nova.offsetParent) return;
+    const F = frameEl.clientWidth;
+    // Scroll speed adds to the orbit speed and fades out smoothly.
+    const v = Math.abs(scrollY - lastY) / Math.max(dt, 0.016);
+    lastY = scrollY;
+    scrollBoost += (Math.min(v * 0.004, 4) - scrollBoost) * (1 - Math.exp(-dt * 3));
+    const p = { F, x: 0, y: 0, rot: 0, sx: 1, sy: 1, boost: 0 };
+    if (!trick && now > nextTrick) {
+      let name;
+      do name = trickNames[Math.floor(Math.random() * trickNames.length)]; while (name === lastTrick);
+      trick = { name, start: now };
+      lastTrick = name;
+    }
+    if (trick) {
+      const k = Math.min(1, (now - trick.start) / TRICKS[trick.name].dur);
+      TRICKS[trick.name].apply(k, p);
+      if (k >= 1) { trick = null; nextTrick = now + 2600 + Math.random() * 2600; }
+    }
+    orbit += dt * (2 * Math.PI / 15) * (1 + scrollBoost + p.boost);
+    const tilt = -10 * Math.PI / 180;
+    const X = 0.56 * F * Math.cos(orbit), Y = 0.15 * F * Math.sin(orbit);
+    const depth = Math.sin(orbit); // > 0 in front of the Moon
+    const x = X * Math.cos(tilt) - Y * Math.sin(tilt) + p.x;
+    const y = X * Math.sin(tilt) + Y * Math.cos(tilt) + p.y;
+    const s = 0.8 + 0.2 * depth;
+    const lean = 10 * Math.cos(orbit) + p.rot;
+    nova.style.transform = `translate(-50%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${lean.toFixed(1)}deg) scale(${(s * p.sx).toFixed(3)}, ${(s * p.sy).toFixed(3)})`;
+    nova.classList.toggle('behind', depth < -0.05);
+  }
+
   addEventListener('scroll', measure, { passive: true });
   addEventListener('resize', measure);
   measure();
   requestAnimationFrame(frame);
 
-  // ---- Entrances: the hero rises once on load; later copy rises once as it scrolls into view.
+  // ---- Entrances: the headline arrives word by word, the rest of the hero follows, and later
+  // copy rises once as it scrolls into view.
+  let w = 0;
+  const splitWords = (node) => {
+    for (const child of [...node.childNodes]) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        const parts = L.lang === 'zh' ? [...child.textContent] : child.textContent.split(/(\s+)/);
+        for (const part of parts) {
+          if (!part) continue;
+          if (/^\s+$/.test(part)) { frag.append(part); continue; }
+          const span = document.createElement('span');
+          span.className = 'w';
+          span.style.setProperty('--w', w++);
+          span.textContent = part;
+          frag.append(span);
+        }
+        child.replaceWith(frag);
+      } else splitWords(child);
+    }
+  };
+  splitWords($('h1'));
+  document.addEventListener('lc:lang', () => {
+    w = 0;
+    $('h1').innerHTML = `<span data-i18n="h1a"></span> <span class="lit" data-i18n="h1b"></span>`;
+    L.apply($('h1'));
+    splitWords($('h1'));
+  });
   $$('.chapter-hero > *').forEach((el, i) => el.style.setProperty('--i', i));
   const reveal = new IntersectionObserver((entries) => {
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); }
@@ -121,6 +214,69 @@
     });
   }
 
+
+  // ---- Starfield behind the page: small twinkling stars in the game's colours that drift slightly
+  // with the scroll, and now and then a shooting star. Sparse enough to never compete with the text.
+  (function starfield() {
+    const canvas = $('#stars');
+    const ctx = canvas.getContext('2d');
+    const tints = ['255,255,255', '255,255,255', '143,227,255', '255,211,107', '200,180,255', '255,170,210'];
+    let stars = [], w = 0, h = 0, dpr = 1, shooting = null, nextShot = performance.now() + 4000;
+    function seed() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = innerWidth; h = innerHeight;
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      const count = Math.round(Math.min(280, (w * h) / 5000));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * w, y: Math.random() * h * 1.6, r: Math.random() < 0.16 ? 1.4 + Math.random() * 1 : 0.4 + Math.random() * 0.8,
+        depth: 0.04 + Math.random() * 0.14, phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 1.6,
+        tint: tints[Math.floor(Math.random() * tints.length)], base: 0.35 + Math.random() * 0.5,
+      }));
+    }
+    function draw(now) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      const still = reduceMotion.matches;
+      const t = still ? 0 : now / 1000;
+      for (const s of stars) {
+        const y = ((s.y - scrollY * s.depth) % (h * 1.6) + h * 1.6) % (h * 1.6);
+        if (y > h + 4) continue;
+        const a = s.base * (still ? 1 : 0.55 + 0.45 * Math.sin(t * s.speed + s.phase));
+        ctx.fillStyle = 'rgba(' + s.tint + ',' + a.toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, Math.PI * 2); ctx.fill();
+        if (s.r > 1.3) { // a soft cross glint on the brightest stars
+          // Sparkle: the glint flares as the star brightens.
+          const flare = Math.pow(Math.max(0, a / s.base), 3);
+          ctx.fillStyle = 'rgba(' + s.tint + ',' + (a * 0.32 * flare).toFixed(3) + ')';
+          ctx.fillRect(s.x - s.r * 4, y - 0.45, s.r * 8, 0.9);
+          ctx.fillRect(s.x - 0.45, y - s.r * 4, 0.9, s.r * 8);
+        }
+      }
+      if (!still) {
+        if (!shooting && now > nextShot && !document.hidden) {
+          shooting = { x: w * (0.35 + Math.random() * 0.6), y: h * (0.05 + Math.random() * 0.3), start: now, len: 120 + Math.random() * 80 };
+        }
+        if (shooting) {
+          const k = (now - shooting.start) / 900;
+          if (k >= 1) { shooting = null; nextShot = now + 7000 + Math.random() * 6000; }
+          else {
+            const e = 1 - Math.pow(1 - k, 3), x = shooting.x - e * 260, y = shooting.y + e * 130;
+            const g = ctx.createLinearGradient(x, y, x + shooting.len, y - shooting.len / 2);
+            g.addColorStop(0, 'rgba(255,255,255,' + (0.8 * (1 - k)).toFixed(3) + ')');
+            g.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.strokeStyle = g; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + shooting.len, y - shooting.len / 2); ctx.stroke();
+          }
+        }
+      }
+      if (!still) requestAnimationFrame(draw);
+    }
+    seed();
+    addEventListener('resize', () => { seed(); if (reduceMotion.matches) draw(0); });
+    if (reduceMotion.matches) { draw(0); addEventListener('scroll', () => draw(0), { passive: true }); }
+    else requestAnimationFrame(draw);
+  })();
+
   // ---- Screenshot carousels: swipe, arrows or dots; the current slide opens full size.
   const viewer = $('#viewer'), viewerImg = $('#viewer-img'), viewerCap = $('#viewer-cap');
   let viewerSlides = [], viewerIndex = 0, viewerReel = null;
@@ -132,13 +288,16 @@
     const bar = document.createElement('div');
     bar.className = 'reel-bar';
     bar.innerHTML = `<p class="reel-count" aria-hidden="true"><b>1</b> / ${slides.length}</p><div class="reel-dots"></div>
-      <button class="reel-btn" type="button" data-dir="-1" aria-label="Previous screen"><svg><use href="#i-prev"/></svg></button>
-      <button class="reel-btn" type="button" data-dir="1" aria-label="Next screen"><svg><use href="#i-next"/></svg></button>`;
+      <div class="reel-nav"><button class="reel-btn" type="button" data-dir="-1" data-i18n-attr="aria-label:a.prev"><svg><use href="#i-prev"/></svg></button>
+      <button class="reel-btn" type="button" data-dir="1" data-i18n-attr="aria-label:a.next"><svg><use href="#i-next"/></svg></button></div>`;
+    L.apply(bar);
     reel.append(bar);
     const dots = slides.map((slide, i) => {
       const dot = document.createElement('button');
       dot.type = 'button';
-      dot.setAttribute('aria-label', `Screen ${i + 1}: ${$('figcaption', slide).textContent}`);
+      const dotLabel = () => dot.setAttribute('aria-label', t('a.screen', { n: i + 1, s: $('figcaption', slide).textContent }));
+      dotLabel();
+      document.addEventListener('lc:lang', dotLabel);
       dot.addEventListener('click', () => go(i));
       $('.reel-dots', bar).append(dot);
       return dot;
@@ -151,9 +310,10 @@
       const open = document.createElement('button');
       open.type = 'button';
       open.className = 'slide-open';
-      open.setAttribute('aria-label', 'View larger: ' + img.alt);
+      open.setAttribute('aria-label', t('a.view', { s: img.alt }));
       img.replaceWith(open);
       open.append(img);
+      slide.style.setProperty('--shot', `url("${img.getAttribute('src')}")`);
       open.insertAdjacentHTML('beforeend', '<span class="expand" aria-hidden="true"><svg><use href="#i-expand"/></svg></span>');
       open.addEventListener('click', () => (i === cur ? openViewer(slides, i, go) : go(i)));
     });
@@ -240,7 +400,8 @@
         play.href = '../';
         play.target = '_blank';
         play.rel = 'noopener';
-        play.innerHTML = '<svg><use href="#i-browser"/></svg>Play online';
+        play.innerHTML = '<svg><use href="#i-globe"/></svg><span data-i18n="play"></span>';
+        L.apply(play);
         row.append(play);
       }
       const first = isAndroid ? android : play;
@@ -258,7 +419,9 @@
   const mb = (bytes) => (bytes >= 10 * 1048576 ? Math.round(bytes / 1048576) : (bytes / 1048576).toFixed(1)) + ' MB';
   fetch('/api/release').then((r) => (r.ok ? r.json() : null)).then((release) => {
     if (!release) return;
-    $$('[data-version]').forEach((el) => (el.textContent = 'Version ' + release.version));
+    const showVersion = () => $$('[data-version]').forEach((el) => (el.textContent = t('version', { v: release.version })));
+    showVersion();
+    document.addEventListener('lc:lang', showVersion);
     $$('[data-version-num]').forEach((el) => (el.textContent = release.version));
     for (const [platform, file] of Object.entries(release.files || {})) {
       if (file.size) $$(`[data-size="${platform}"]`).forEach((el) => (el.textContent = mb(file.size)));
@@ -268,20 +431,20 @@
   }).catch(() => {});
 
   // ---- Reviews.
-  const ROLES = { parent: 'Parent', teacher: 'Teacher', pupil: 'Pupil', other: 'Player' };
+  const roleName = (role) => t(role === 'other' || !role ? 'role.chip.other' : 'role.' + role);
   const SHOWN_FIRST = 3;
   const list = $('#review-list'), more = $('#reviews-more');
   let reviews = [], expanded = false;
   const loved = new Set((() => { try { return JSON.parse(localStorage.getItem('lc-loved') || '[]'); } catch (e) { return []; } })());
   const saveLoved = () => { try { localStorage.setItem('lc-loved', JSON.stringify([...loved])); } catch (e) {} };
 
-  function hearts(n, label) {
+  function stars(n) {
     const wrap = document.createElement('span');
-    wrap.className = 'hearts';
+    wrap.className = 'stars-row';
     wrap.setAttribute('role', 'img');
-    wrap.setAttribute('aria-label', label || `${n} out of 5 hearts`);
+    wrap.setAttribute('aria-label', t('rv.stars', { n: Math.round(n * 10) / 10 }));
     for (let i = 1; i <= 5; i++) {
-      wrap.insertAdjacentHTML('beforeend', `<svg class="${i <= Math.round(n) ? 'on' : 'off'}"><use href="#i-heart"/></svg>`);
+      wrap.insertAdjacentHTML('beforeend', `<svg class="${i <= Math.round(n) ? 'on' : 'off'}"><use href="#i-star"/></svg>`);
     }
     return wrap;
   }
@@ -295,11 +458,11 @@
     name.textContent = r.name;
     const chip = document.createElement('span');
     chip.className = 'chip';
-    chip.textContent = ROLES[r.role] || 'Player';
+    chip.textContent = roleName(r.role);
     const date = document.createElement('time');
     date.className = 'review-date';
     date.dateTime = new Date(r.createdAt).toISOString();
-    date.textContent = new Date(r.createdAt).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+    date.textContent = new Date(r.createdAt).toLocaleDateString(L.locale, { day: 'numeric', month: 'short', year: 'numeric' });
     head.append(name, chip, date);
     const body = document.createElement('p');
     body.textContent = r.body;
@@ -308,7 +471,8 @@
     love.className = 'love';
     const isLoved = loved.has(r.id);
     love.setAttribute('aria-pressed', String(isLoved));
-    love.innerHTML = '<svg><use href="#i-heart"/></svg><span></span><span class="sr-only"> loves, love this review</span>';
+    love.innerHTML = '<svg><use href="#i-heart"/></svg><span></span>';
+    love.setAttribute('aria-label', t('rv.love'));
     love.querySelector('span').textContent = r.loves;
     love.addEventListener('click', () => {
       if (loved.has(r.id)) return;
@@ -324,21 +488,21 @@
         .then((data) => { if (data) love.querySelector('span').textContent = data.loves; })
         .catch(() => {});
     });
-    li.append(head, hearts(r.hearts), body, love);
+    li.append(head, stars(r.hearts), body, love);
     return li;
   }
   function renderReviews(freshId) {
     list.replaceChildren(...reviews.filter((r, i) => expanded || i < SHOWN_FIRST).map((r) => reviewItem(r, r.id === freshId)));
     $('#reviews-empty').hidden = reviews.length > 0;
     more.hidden = reviews.length <= SHOWN_FIRST;
-    more.textContent = expanded ? 'Show fewer' : `Show all ${reviews.length} reviews`;
+    more.textContent = expanded ? t('rv.fewer') : t('rv.more', { n: reviews.length });
   }
   function renderSummary(count, average) {
     $('#reviews-summary').hidden = !count;
     if (!count) return;
     $('#reviews-avg').textContent = average.toFixed(1);
-    $('#reviews-avg-hearts').replaceChildren(...hearts(average).childNodes);
-    $('#reviews-count').textContent = count === 1 ? 'from 1 review' : `from ${count} reviews`;
+    $('#reviews-avg-stars').replaceChildren(...stars(average).childNodes);
+    $('#reviews-count').textContent = count === 1 ? t('rv.count1') : t('rv.countN', { n: count });
   }
   let summary = { count: 0, total: 0 };
   more.addEventListener('click', () => { expanded = !expanded; renderReviews(); });
@@ -354,7 +518,7 @@
 
   // ---- Review form.
   const form = $('#review-form'), errorEl = $('#form-error'), okEl = $('#form-ok'), submit = $('#rv-submit');
-  const heartLabels = $$('#heart-pick label');
+  const heartLabels = $$('#star-pick label');
   const paintHearts = (n) => heartLabels.forEach((l, i) => l.classList.toggle('on', i < n));
   const chosenHearts = () => Number((form.querySelector('input[name=hearts]:checked') || {}).value || 0);
   heartLabels.forEach((label, i) => {
@@ -376,16 +540,19 @@
       hearts: Number(data.get('hearts')),
       body: String(data.get('body') || '').trim(),
     };
-    if (!review.name) return showError('Please add a nickname.');
-    if (!review.role) return showError('Please choose who you are.');
-    if (!review.hearts) return showError('Please choose how many hearts.');
-    if (Array.from(review.body).length < 10) return showError('Reviews need at least 10 characters.');
+    if (!review.name) return showError(t('err.name'));
+    if (!review.role) return showError(t('err.role'));
+    if (!review.hearts) return showError(t('err.stars'));
+    if (Array.from(review.body).length < 10) return showError(t('err.short'));
     submit.disabled = true;
-    submit.textContent = 'Posting…';
+    submit.textContent = t('rv.posting');
     try {
       const res = await fetch('/api/reviews', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) });
       const out = await res.json().catch(() => ({}));
-      if (!res.ok) return showError(out.message || 'Your review could not be posted. Please try again.');
+      if (!res.ok) {
+        const known = { name: 'err.name', fields: 'err.role', length: 'err.length', links: 'err.links', words: 'err.words', limit: 'err.limit' }[out.error];
+        return showError(t(known || 'err.generic'));
+      }
       reviews.unshift(out.review);
       summary.count += 1;
       summary.total += out.review.hearts;
@@ -396,10 +563,18 @@
       $('#rv-count').textContent = '0';
       okEl.hidden = false;
     } catch (err) {
-      showError('Your review could not be posted. Check your connection and try again.');
+      showError(t('err.network'));
     } finally {
       submit.disabled = false;
-      submit.textContent = 'Post review';
+      submit.textContent = t('rv.submit');
     }
+  });
+
+  // ---- Language switcher: English by default, BM and 中文 on request; remembered per browser.
+  for (const b of $$('.lang [data-lang]')) b.addEventListener('click', () => L.set(b.dataset.lang));
+  document.addEventListener('lc:lang', () => {
+    if (current >= 0) { phaseEl.textContent = L.phase(current); factEl.textContent = L.fact(current); }
+    renderSummary(summary.count, summary.count ? summary.total / summary.count : 0);
+    renderReviews();
   });
 })();

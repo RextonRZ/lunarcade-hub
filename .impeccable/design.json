@@ -1,56 +1,453 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T00:00:00Z",
+  "generatedAt": "2026-10-27T12:00:00Z",
   "title": "Design System: LunarCade Hub",
   "extensions": {
     "colorMeta": {
-      "bg": { "role": "neutral", "displayName": "Night Sky Indigo", "canonical": "oklch(16.1% 0.042 276.3)", "tonalRamp": ["#07091c", "#1f2238", "#3a3e56", "#575c76", "#797e9a", "#9aa0bc", "#c0c6e3", "#e6edff"] },
-      "surface": { "role": "neutral", "displayName": "Deep Orbit", "canonical": "oklch(21.3% 0.060 275.9)", "tonalRamp": ["#060624", "#1c2141", "#373d5f", "#545b80", "#767ea5", "#979fc8", "#bcc5ef", "#e3ecff"] },
-      "surface-2": { "role": "neutral", "displayName": "High Orbit", "canonical": "oklch(25.2% 0.074 275.4)", "tonalRamp": ["#060429", "#1b1f47", "#353c67", "#525a88", "#737dad", "#949ed0", "#b9c4f8", "#e0ebff"] },
-      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(214, 219, 255, 0.12)" },
-      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgba(214, 219, 255, 0.22)" },
-      "ink-strong": { "role": "neutral", "displayName": "Starlight", "canonical": "oklch(96.9% 0.016 293.8)", "tonalRamp": ["#0b0a11", "#24232b", "#403e48", "#5e5c66", "#807f89", "#a2a0ab", "#c7c5d1", "#efedf9"] },
-      "ink": { "role": "neutral", "displayName": "Lavender Ink", "canonical": "oklch(84.9% 0.040 280.8)", "tonalRamp": ["#09081c", "#202237", "#3c3d55", "#595b74", "#7b7e98", "#9c9fbb", "#c2c5e2", "#e9ecff"] },
-      "ink-muted": { "role": "neutral", "displayName": "Dusk Ink", "canonical": "oklch(65.8% 0.060 280.2)", "tonalRamp": ["#080623", "#1f2040", "#3a3c5f", "#575a7f", "#797da4", "#9a9ec7", "#bfc4ee", "#e6ebff"] },
-      "accent": { "role": "primary", "displayName": "Moonlight Gold", "canonical": "oklch(88.5% 0.132 86.6)", "tonalRamp": ["#210000", "#3f1900", "#5d3700", "#7e5600", "#a27900", "#c59b2b", "#edc158", "#ffe981"] },
-      "accent-hover": { "role": "primary", "displayName": "Moonlight Gold, hover", "canonical": "#ffdc84" },
-      "accent-ink": { "role": "primary", "displayName": "Gold Shadow Ink", "canonical": "oklch(21.9% 0.052 291.8)", "tonalRamp": ["#0c061f", "#251f3b", "#403b59", "#5e5979", "#807b9d", "#a19cc0", "#c7c2e7", "#eee9ff"] },
-      "cyan": { "role": "secondary", "displayName": "Nova Cyan", "canonical": "oklch(87.2% 0.090 221.2)", "tonalRamp": ["#000f25", "#002b42", "#004961", "#006881", "#368ca6", "#5aaec9", "#81d5f1", "#a9fdff"] },
-      "safe": { "role": "tertiary", "displayName": "Earthshine Green", "canonical": "oklch(83.2% 0.118 161.7)", "tonalRamp": ["#001600", "#00330f", "#00512b", "#007148", "#29966a", "#52b88a", "#7adfaf", "#a2ffd6"] },
-      "rose": { "role": "tertiary", "displayName": "Heart Rose", "canonical": "oklch(78.1% 0.142 357.6)", "tonalRamp": ["#2e000b", "#510024", "#740b40", "#98325e", "#c05780", "#e679a2", "#ff9fc8", "#ffc5ef"] }
+      "bg": {
+        "role": "neutral",
+        "displayName": "Night Sky Indigo",
+        "canonical": "oklch(16.1% 0.042 276.3)",
+        "tonalRamp": [
+          "#07091c",
+          "#1f2238",
+          "#3a3e56",
+          "#575c76",
+          "#797e9a",
+          "#9aa0bc",
+          "#c0c6e3",
+          "#e6edff"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Deep Orbit",
+        "canonical": "oklch(21.3% 0.060 275.9)",
+        "tonalRamp": [
+          "#060624",
+          "#1c2141",
+          "#373d5f",
+          "#545b80",
+          "#767ea5",
+          "#979fc8",
+          "#bcc5ef",
+          "#e3ecff"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "High Orbit",
+        "canonical": "oklch(25.2% 0.074 275.4)",
+        "tonalRamp": [
+          "#060429",
+          "#1b1f47",
+          "#353c67",
+          "#525a88",
+          "#737dad",
+          "#949ed0",
+          "#b9c4f8",
+          "#e0ebff"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(214, 219, 255, 0.12)"
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "rgba(214, 219, 255, 0.22)"
+      },
+      "ink-strong": {
+        "role": "neutral",
+        "displayName": "Starlight",
+        "canonical": "oklch(96.9% 0.016 293.8)",
+        "tonalRamp": [
+          "#0b0a11",
+          "#24232b",
+          "#403e48",
+          "#5e5c66",
+          "#807f89",
+          "#a2a0ab",
+          "#c7c5d1",
+          "#efedf9"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Lavender Ink",
+        "canonical": "oklch(84.9% 0.040 280.8)",
+        "tonalRamp": [
+          "#09081c",
+          "#202237",
+          "#3c3d55",
+          "#595b74",
+          "#7b7e98",
+          "#9c9fbb",
+          "#c2c5e2",
+          "#e9ecff"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Dusk Ink",
+        "canonical": "oklch(65.8% 0.060 280.2)",
+        "tonalRamp": [
+          "#080623",
+          "#1f2040",
+          "#3a3c5f",
+          "#575a7f",
+          "#797da4",
+          "#9a9ec7",
+          "#bfc4ee",
+          "#e6ebff"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Moonlight Gold",
+        "canonical": "oklch(88.5% 0.132 86.6)",
+        "tonalRamp": [
+          "#210000",
+          "#3f1900",
+          "#5d3700",
+          "#7e5600",
+          "#a27900",
+          "#c59b2b",
+          "#edc158",
+          "#ffe981"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Moonlight Gold, hover",
+        "canonical": "#ffde8c"
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Gold Shadow Ink",
+        "canonical": "oklch(21.9% 0.052 291.8)",
+        "tonalRamp": [
+          "#0c061f",
+          "#251f3b",
+          "#403b59",
+          "#5e5979",
+          "#807b9d",
+          "#a19cc0",
+          "#c7c2e7",
+          "#eee9ff"
+        ]
+      },
+      "cyan": {
+        "role": "secondary",
+        "displayName": "Nova Cyan",
+        "canonical": "oklch(87.2% 0.090 221.2)",
+        "tonalRamp": [
+          "#000f25",
+          "#002b42",
+          "#004961",
+          "#006881",
+          "#368ca6",
+          "#5aaec9",
+          "#81d5f1",
+          "#a9fdff"
+        ]
+      },
+      "safe": {
+        "role": "tertiary",
+        "displayName": "Earthshine Green",
+        "canonical": "oklch(83.2% 0.118 161.7)",
+        "tonalRamp": [
+          "#001600",
+          "#00330f",
+          "#00512b",
+          "#007148",
+          "#29966a",
+          "#52b88a",
+          "#7adfaf",
+          "#a2ffd6"
+        ]
+      },
+      "rose": {
+        "role": "tertiary",
+        "displayName": "Heart Rose",
+        "canonical": "oklch(78.1% 0.142 357.6)",
+        "tonalRamp": [
+          "#2e000b",
+          "#510024",
+          "#740b40",
+          "#98325e",
+          "#c05780",
+          "#e679a2",
+          "#ff9fc8",
+          "#ffc5ef"
+        ]
+      },
+      "hover-tint": {
+        "role": "neutral",
+        "displayName": "Hover Tint",
+        "canonical": "rgba(255, 255, 255, 0.06)"
+      },
+      "hover-tint-strong": {
+        "role": "neutral",
+        "displayName": "Hover Tint, strong",
+        "canonical": "rgba(255, 255, 255, 0.07)"
+      },
+      "scrim": {
+        "role": "neutral",
+        "displayName": "Scrim",
+        "canonical": "rgba(5, 6, 18, 0.86)"
+      },
+      "shadow-soft": {
+        "role": "neutral",
+        "displayName": "Shadow, soft",
+        "canonical": "rgba(0, 0, 0, 0.25)"
+      },
+      "shadow": {
+        "role": "neutral",
+        "displayName": "Shadow",
+        "canonical": "rgba(0, 0, 0, 0.3)"
+      },
+      "shadow-mid": {
+        "role": "neutral",
+        "displayName": "Shadow, mid",
+        "canonical": "rgba(0, 0, 0, 0.35)"
+      },
+      "shadow-deep": {
+        "role": "neutral",
+        "displayName": "Shadow, deep",
+        "canonical": "rgba(0, 0, 0, 0.38)"
+      },
+      "shadow-figure": {
+        "role": "neutral",
+        "displayName": "Shadow, figure",
+        "canonical": "rgba(0, 0, 0, 0.45)"
+      },
+      "shadow-float": {
+        "role": "neutral",
+        "displayName": "Shadow, float",
+        "canonical": "rgba(0, 0, 0, 0.5)"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The single page headline; second sentence may be gold on its own line." },
-      "headline": { "displayName": "Headline", "purpose": "One short plain-sentence heading per chapter." },
-      "readout": { "displayName": "Phase Readout", "purpose": "Current phase name under the live Moon, always Nova Cyan." },
-      "title": { "displayName": "Title", "purpose": "Panel, install-step and form headings." },
-      "lede": { "displayName": "Lede", "purpose": "The opening paragraph only." },
-      "body": { "displayName": "Body", "purpose": "All reading text; chapter paragraphs capped at 36em." },
-      "label": { "displayName": "Label", "purpose": "Buttons, form labels and legends, nav links, chips." },
-      "meta": { "displayName": "Meta", "purpose": "Facts line, spec rows, dates, captions, counters; tabular numerals." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single page headline; second sentence in gold on its own line."
+      },
+      "display-phone": {
+        "displayName": "Display, phone",
+        "purpose": "The page headline below 520px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "One short plain-sentence heading per chapter."
+      },
+      "score": {
+        "displayName": "Score",
+        "purpose": "The review average beside its hearts."
+      },
+      "readout": {
+        "displayName": "Phase Readout",
+        "purpose": "Current phase name under the live Moon, always Nova Cyan."
+      },
+      "readout-strip": {
+        "displayName": "Phase Readout, strip",
+        "purpose": "The phase name in the phone Moon strip."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Download card, install-step and form headings."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "LUNARCADE with HUB in gold, beside Nova's helmet."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The opening sentence pair only."
+      },
+      "body-lead": {
+        "displayName": "Body lead",
+        "purpose": "The one paragraph under each chapter heading, capped at 36rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Review comments and other reading text."
+      },
+      "body-small": {
+        "displayName": "Body small",
+        "purpose": "Text inside cards and install steps."
+      },
+      "label-large": {
+        "displayName": "Label, large",
+        "purpose": "Viewer caption and the show-more row."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels and legends; buttons at 1rem; nav and pills at 700."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Slide captions under screenshots."
+      },
+      "label-small": {
+        "displayName": "Label, small",
+        "purpose": "Reel counter, love toggle, review dates, phone nav."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Facts line, spec rows, form note, readout fact; tabular numerals."
+      },
+      "fine": {
+        "displayName": "Fine",
+        "purpose": "Footer, character counter, phone readout day."
+      },
+      "fine-link": {
+        "displayName": "Fine link",
+        "purpose": "Footer links."
+      },
+      "tooltip": {
+        "displayName": "Tooltip",
+        "purpose": "Phase-dial tooltips."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "The reviewer role chip."
+      }
     },
     "shadows": [
-      { "name": "float", "value": "0 2px 6px rgba(0,0,0,0.25), 0 24px 60px rgba(0,0,0,0.35)", "purpose": "Real game screenshots floating over the sky." },
-      { "name": "lift", "value": "0 1px 2px rgba(0,0,0,0.35), 0 8px 22px rgba(0,0,0,0.35)", "purpose": "The gold primary button." },
-      { "name": "focus-halo", "value": "0 0 0 3px rgba(255,211,107,0.18)", "purpose": "Inputs on keyboard focus, paired with a gold border." },
-      { "name": "phase-ring", "value": "0 0 0 2px #090b1f, 0 0 0 3.5px #ffd36b", "purpose": "The active phase in the eight-phase dial." },
-      { "name": "glass", "value": "background: rgba(9,11,31,0.82); backdrop-filter: blur(10px)", "purpose": "Pinned bars only: the header and the phone Moon strip (0.9 alpha)." },
-      { "name": "moonlit-panel", "value": "radial-gradient(80% 120% at 0% 0%, rgba(255,211,107,0.16), transparent 70%)", "purpose": "The Windows download panel; opacity follows the Moon's lit fraction squared." }
+      {
+        "name": "float",
+        "value": "0 2px 6px rgba(0,0,0,0.25), 0 22px 50px rgba(0,0,0,0.35)",
+        "purpose": "Screenshot slides floating over the sky."
+      },
+      {
+        "name": "lift",
+        "value": "0 1px 2px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.3)",
+        "purpose": "The gold primary button at rest."
+      },
+      {
+        "name": "lift-hover",
+        "value": "0 2px 4px rgba(0,0,0,0.35), 0 14px 28px rgba(0,0,0,0.38)",
+        "purpose": "The primary button under a fine pointer."
+      },
+      {
+        "name": "figure-drop",
+        "value": "drop-shadow(0 18px 22px rgba(0,0,0,0.5))",
+        "purpose": "Nova cut-out renders (0 16px 20px at the close; 0 2px 6px rgba(0,0,0,0.45) for the header helmet)."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 3px rgba(255,211,107,0.18)",
+        "purpose": "Inputs on keyboard focus, paired with a gold border."
+      },
+      {
+        "name": "phase-ring",
+        "value": "0 0 0 2px #090b1f, 0 0 0 3.5px #ffd36b",
+        "purpose": "The active phase in the eight-phase dial."
+      },
+      {
+        "name": "glass",
+        "value": "background: rgba(9,11,31,0.8); backdrop-filter: blur(12px)",
+        "purpose": "The header; the phone Moon strip uses 0.9 alpha and 10px blur."
+      },
+      {
+        "name": "scrim",
+        "value": "background: rgba(5,6,18,0.86); backdrop-filter: blur(6px)",
+        "purpose": "Behind the screenshot viewer."
+      },
+      {
+        "name": "moonlit-panel",
+        "value": "radial-gradient(80% 120% at 0% 0%, rgba(255,211,107,0.16), transparent 70%)",
+        "purpose": "The Windows download panel; opacity follows the Moon's lit fraction squared."
+      }
     ],
     "motion": [
-      { "name": "ease", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Entrances: hero rise, chapter copy, fresh review." },
-      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Presses, screenshot clip reveal, phase dial scale, skip link." },
-      { "name": "press", "value": "120ms", "purpose": "Button and toggle scale on :active (0.97, 0.95)." },
-      { "name": "state", "value": "160-180ms ease", "purpose": "Colour and border changes on hover and selection." },
-      { "name": "readout-swap", "value": "220ms ease, opacity + 3px blur", "purpose": "Phase name and fact change under the Moon." },
-      { "name": "chapter-arrive", "value": "700ms", "purpose": "Chapter heading and copy rise from 0.35 opacity as the Moon reaches them." },
-      { "name": "hero-rise", "value": "900ms, 12px + 4px blur, 60ms stagger", "purpose": "One authored entrance for the opening chapter." },
-      { "name": "shot-reveal", "value": "900ms clip-path, inset +140ms", "purpose": "Screenshots reveal top-down on entering view." },
-      { "name": "moon-follow", "value": "exponential, rate 5/s", "purpose": "The live Moon eases to the in-view chapter's day; snaps under reduced motion." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Every response: presses, hovers, reveals, the viewer, the readout swap."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "Things moving on their own: Nova's drift."
+      },
+      {
+        "name": "press",
+        "value": "160ms, scale 0.97",
+        "purpose": "Buttons and the Play online pill; 0.96 pills, 0.95 love, 0.94 icon buttons, 0.99 slides, 0.9 phase dots, 0.85 hearts."
+      },
+      {
+        "name": "state",
+        "value": "200ms",
+        "purpose": "Colour, border and background changes on hover and selection."
+      },
+      {
+        "name": "underline",
+        "value": "250ms scaleX from the left",
+        "purpose": "Header and footer nav hover underline."
+      },
+      {
+        "name": "tooltip",
+        "value": "140ms, 300ms first delay, then instant",
+        "purpose": "Phase-dial tooltips warm up once, then follow the pointer with no delay."
+      },
+      {
+        "name": "readout-swap",
+        "value": "200ms opacity + 3px blur",
+        "purpose": "Phase name and fact change under the Moon."
+      },
+      {
+        "name": "hero-rise",
+        "value": "900ms, 14px + 4px blur, 70ms stagger",
+        "purpose": "One authored entrance for the opening chapter."
+      },
+      {
+        "name": "reveal",
+        "value": "800ms, 16px + 4px blur, 70ms stagger",
+        "purpose": "Later chapter content rises once as it scrolls in."
+      },
+      {
+        "name": "slide-step",
+        "value": "450ms opacity + scale",
+        "purpose": "Reel neighbours (45%, 0.96) step forward when chosen; progress bar fills over 350ms."
+      },
+      {
+        "name": "viewer",
+        "value": "220ms open from 0.96, 150ms close to 0.98",
+        "purpose": "Screenshot viewer dialog; image swap 180ms to 20% + 4px blur."
+      },
+      {
+        "name": "drift",
+        "value": "7s ease-in-out infinite alternate",
+        "purpose": "Nova floats 6px across, 12px up, -4 to 3 degrees."
+      },
+      {
+        "name": "moon-timelapse",
+        "value": "29.53 days per 24s",
+        "purpose": "At the top of the page the Moon plays the month on its own."
+      },
+      {
+        "name": "moon-follow",
+        "value": "exponential spring, rate 5/s, shortest way round",
+        "purpose": "After scrolling, the Moon eases to the in-view chapter's day; under reduced motion it holds Day 1 at the top and snaps after."
+      }
     ],
     "breakpoints": [
-      { "name": "phone", "value": "520px" },
-      { "name": "tablet", "value": "900px" }
+      {
+        "name": "phone",
+        "value": "520px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "short-window",
+        "value": "max-height 700px"
+      }
     ]
   },
   "components": [
@@ -58,25 +455,25 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one gold action per view: Download for Windows, or the form submit.",
-      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 4v11M7 10.5l5 5 5-5M5 20h14\"/></svg>Download for Windows</a>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font: 800 1rem/1 Nunito, 'Noto Sans SC', system-ui, sans-serif; text-decoration: none; cursor: pointer; transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), background-color 180ms ease, border-color 180ms ease; } .ds-btn svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-btn-primary { background: var(--accent, #ffd36b); color: var(--accent-ink, #1b1530); box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 22px rgba(0,0,0,0.35); } .ds-btn-primary:hover { background: #ffdc84; } .ds-btn:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-btn:active { transform: scale(0.97); }"
+      "description": "The one gold action per row: the visitor's own platform, or the form submit.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\"><svg viewBox=\"0 0 448 512\" aria-hidden=\"true\"><path d=\"M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z\"/></svg>Download for Windows</a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 24px; border-radius: 999px; border: 1px solid transparent; font: 800 1rem/1 Nunito, 'Noto Sans SC', system-ui, sans-serif; text-decoration: none; cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), color 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn svg { width: 1.15em; height: 1.15em; fill: currentColor; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary { background: var(--accent, #ffd36b); color: var(--accent-ink, #1b1530); box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.3); } @media (hover: hover) and (pointer: fine) { .ds-btn-primary:hover { background: var(--accent-hover, #ffde8c); box-shadow: 0 2px 4px rgba(0,0,0,0.35), 0 14px 28px rgba(0,0,0,0.38); } .ds-btn:hover svg { transform: translateY(-1px) scale(1.06); } } .ds-btn:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-btn:active { transform: scale(0.97); }"
     },
     {
       "name": "Ghost Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Secondary paths such as Android and Play online.",
-      "html": "<a class=\"ds-btn-ghost\" href=\"#\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5.5 10.5a6.5 6.5 0 0 1 13 0V17a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM8 4.5l1.6 2.4M16 4.5l-1.6 2.4M9.5 13.25h.01M14.5 13.25h.01M8.5 18v2.5M15.5 18v2.5\"/></svg>Download for Android</a>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); background: rgba(18,21,52,0.5); color: var(--ink-strong, #f5f3ff); font: 800 1rem/1 Nunito, system-ui, sans-serif; text-decoration: none; transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), border-color 180ms ease; } .ds-btn-ghost svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-btn-ghost:hover { border-color: rgba(255,211,107,0.55); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-btn-ghost:active { transform: scale(0.97); }"
+      "description": "Secondary paths such as Android.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\"><svg viewBox=\"0 0 576 512\" aria-hidden=\"true\"><path d=\"M420.55,301.93a24,24,0,1,1,24-24,24,24,0,0,1-24,24m-265.1,0a24,24,0,1,1,24-24,24,24,0,0,1-24,24m273.7-144.48,47.94-83a10,10,0,1,0-17.27-10h0l-48.54,84.07a301.25,301.25,0,0,0-246.56,0L116.18,64.45a10,10,0,1,0-17.27,10h0l47.94,83C64.53,202.22,8.24,285.55,0,384H576c-8.24-98.45-64.54-181.78-146.85-226.55\"/></svg>Download for Android</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 24px; border-radius: 999px; border: 1px solid transparent; font: 800 1rem/1 Nunito, 'Noto Sans SC', system-ui, sans-serif; text-decoration: none; cursor: pointer; transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), color 200ms cubic-bezier(0.23, 1, 0.32, 1); border-color: var(--hairline-strong, rgba(214,219,255,0.22)); background: rgba(18,21,52,0.55); color: var(--ink-strong, #f5f3ff); } .ds-btn-ghost svg { width: 1.15em; height: 1.15em; fill: currentColor; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } @media (hover: hover) and (pointer: fine) { .ds-btn-ghost:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,211,107,0.55); } .ds-btn-ghost:hover svg { transform: translateY(-1px) scale(1.06); } } .ds-btn-ghost:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-btn-ghost:active { transform: scale(0.97); }"
     },
     {
       "name": "Text Button",
       "kind": "button",
       "refersTo": "button-text",
-      "description": "A quiet third path beside the button pair.",
-      "html": "<a class=\"ds-btn-text\" href=\"#\">Play online<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 6h9v9M18 6 6 18\"/></svg></a>",
-      "css": ".ds-btn-text { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px; color: var(--ink-strong, #f5f3ff); font: 800 1rem/1 Nunito, system-ui, sans-serif; text-decoration: none; transition: color 180ms ease; } .ds-btn-text svg { width: 0.95em; height: 0.95em; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; } .ds-btn-text:hover { color: var(--accent, #ffd36b); } .ds-btn-text:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; border-radius: 6px; }"
+      "description": "A quiet third path beside the button pair at the close.",
+      "html": "<a class=\"ds-btn-text\" href=\"#\">Play online<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a>",
+      "css": ".ds-btn-text { display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 10px; color: var(--ink-strong, #f5f3ff); font: 800 1rem/1 Nunito, system-ui, sans-serif; text-decoration: none; transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-text svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } @media (hover: hover) and (pointer: fine) { .ds-btn-text:hover { color: var(--accent, #ffd36b); } .ds-btn-text:hover svg { transform: translate(2px, -2px); } } .ds-btn-text:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; border-radius: 8px; } .ds-btn-text:active { transform: scale(0.97); }"
     },
     {
       "name": "Text Field",
@@ -84,7 +481,7 @@
       "refersTo": "field-input",
       "description": "Labelled input on a translucent night fill; gold border and halo on focus.",
       "html": "<div class=\"ds-field\"><label for=\"ds-nick\">Nickname</label><input id=\"ds-nick\" class=\"ds-input\" maxlength=\"20\" placeholder=\"Nickname\"></div>",
-      "css": ".ds-field { display: grid; gap: 8px; } .ds-field label { color: var(--ink-strong, #f5f3ff); font: 800 0.9rem/1.3 Nunito, system-ui, sans-serif; } .ds-input { width: 100%; padding: 12px 14px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 10px; background: rgba(9,11,31,0.55); color: var(--ink-strong, #f5f3ff); font: 400 1rem/1.5 'Nunito Text', Nunito, system-ui, sans-serif; caret-color: var(--accent, #ffd36b); transition: border-color 160ms ease, box-shadow 160ms ease; } .ds-input:hover { border-color: rgba(214,219,255,0.32); } .ds-input:focus-visible { outline: none; border-color: var(--accent, #ffd36b); box-shadow: 0 0 0 3px rgba(255,211,107,0.18); }"
+      "css": ".ds-field { display: grid; gap: 8px; } .ds-field label { color: var(--ink-strong, #f5f3ff); font: 800 0.9rem/1.3 Nunito, system-ui, sans-serif; } .ds-input { width: 100%; padding: 12px 14px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 10px; background: rgba(9,11,31,0.55); color: var(--ink-strong, #f5f3ff); font: 400 1rem/1.5 'Nunito Text', Nunito, system-ui, sans-serif; caret-color: var(--accent, #ffd36b); transition: border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-input::placeholder { color: #7d81aa; } .ds-input:focus-visible { outline: none; border-color: var(--accent, #ffd36b); box-shadow: 0 0 0 3px rgba(255,211,107,0.18); }"
     },
     {
       "name": "Choice Pills",
@@ -92,7 +489,7 @@
       "refersTo": "pill-choice",
       "description": "Single-choice radio group as outlined pills; the checked pill gets a gold wash.",
       "html": "<div class=\"ds-pills\"><label><input type=\"radio\" name=\"ds-role\" checked><span>Parent</span></label><label><input type=\"radio\" name=\"ds-role\"><span>Teacher</span></label><label><input type=\"radio\" name=\"ds-role\"><span>Pupil</span></label></div>",
-      "css": ".ds-pills { display: flex; flex-wrap: wrap; gap: 8px; } .ds-pills label { position: relative; } .ds-pills input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-pills span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 999px; color: var(--ink, #c8cbe8); font: 700 0.9rem/1 Nunito, system-ui, sans-serif; cursor: pointer; transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease; } .ds-pills span:hover { color: var(--ink-strong, #f5f3ff); } .ds-pills input:checked + span { background: rgba(255,211,107,0.14); border-color: rgba(255,211,107,0.6); color: var(--ink-strong, #f5f3ff); } .ds-pills input:focus-visible + span { outline: 2px solid var(--accent, #ffd36b); outline-offset: 2px; }"
+      "css": ".ds-pills { display: flex; flex-wrap: wrap; gap: 8px; } .ds-pills label { position: relative; } .ds-pills input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-pills span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 999px; color: var(--ink, #c8cbe8); font: 700 0.9rem/1 Nunito, system-ui, sans-serif; cursor: pointer; transition: background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-pills label:active span { transform: scale(0.96); } .ds-pills input:checked + span { background: rgba(255,211,107,0.14); border-color: rgba(255,211,107,0.6); color: var(--ink-strong, #f5f3ff); } .ds-pills input:focus-visible + span { outline: 2px solid var(--accent, #ffd36b); outline-offset: 2px; } @media (hover: hover) and (pointer: fine) { .ds-pills span:hover { border-color: rgba(255,211,107,0.45); color: var(--ink-strong, #f5f3ff); } }"
     },
     {
       "name": "Role Chip",
@@ -107,60 +504,102 @@
       "kind": "card",
       "refersTo": "panel-lit",
       "description": "The featured download: High Orbit surface, hairline border, spec list and a gold glow from the top-left.",
-      "html": "<article class=\"ds-panel\"><h3>Windows</h3><dl class=\"ds-spec\"><div><dt>Version</dt><dd>2.9.7</dd></div><div><dt>Download</dt><dd>131 MB</dd></div></dl></article>",
-      "css": ".ds-panel { position: relative; isolation: isolate; padding: 26px; border: 1px solid var(--hairline, rgba(214,219,255,0.12)); border-radius: 14px; background: var(--surface-2, #191d45); display: grid; gap: 16px; transition: border-color 180ms ease; } .ds-panel::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: radial-gradient(80% 120% at 0% 0%, rgba(255,211,107,0.16), transparent 70%); } .ds-panel:hover { border-color: var(--hairline-strong, rgba(214,219,255,0.22)); } .ds-panel h3 { margin: 0; color: var(--ink-strong, #f5f3ff); font: 800 1.1rem/1.3 Nunito, system-ui, sans-serif; } .ds-spec { margin: 0; display: grid; gap: 10px; } .ds-spec div { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--hairline, rgba(214,219,255,0.12)); } .ds-spec dt { color: var(--ink-muted, #8a8eb6); font-size: 0.9rem; } .ds-spec dd { margin: 0; color: var(--ink-strong, #f5f3ff); font-weight: 600; font-variant-numeric: tabular-nums; }"
+      "html": "<article class=\"ds-panel\"><div class=\"ds-panel-head\"><svg viewBox=\"0 0 448 512\" aria-hidden=\"true\"><path d=\"M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z\"/></svg><h3>Windows</h3></div><dl class=\"ds-spec\"><div><dt>Version</dt><dd>2.9.7</dd></div><div><dt>Size</dt><dd>131 MB</dd></div><div><dt>Needs</dt><dd>Windows 10 or 11</dd></div></dl></article>",
+      "css": ".ds-panel { position: relative; isolation: isolate; padding: 24px; border: 1px solid var(--hairline, rgba(214,219,255,0.12)); border-radius: 14px; background: var(--surface-2, #191d45); display: grid; gap: 16px; transition: border-color 250ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-panel::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: radial-gradient(80% 120% at 0% 0%, rgba(255,211,107,0.16), transparent 70%); } @media (hover: hover) and (pointer: fine) { .ds-panel:hover { border-color: var(--hairline-strong, rgba(214,219,255,0.22)); } } .ds-panel-head { display: flex; align-items: center; gap: 10px; color: var(--ink-strong, #f5f3ff); } .ds-panel-head svg { width: 22px; height: 22px; fill: currentColor; } .ds-panel h3 { margin: 0; font: 800 1.05rem/1.3 Nunito, system-ui, sans-serif; } .ds-spec { margin: 0; display: grid; gap: 8px; } .ds-spec div { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--hairline, rgba(214,219,255,0.12)); } .ds-spec dt { color: var(--ink-muted, #8a8eb6); font-size: 0.9rem; } .ds-spec dd { margin: 0; color: var(--ink-strong, #f5f3ff); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }"
     },
     {
       "name": "Header Navigation",
       "kind": "nav",
       "refersTo": "nav",
-      "description": "Sticky glass header: wordmark, chapter links, outlined Play online pill.",
-      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\">LUNARCADE <b>HUB</b></a><nav class=\"ds-nav\"><a href=\"#\">The game</a><a href=\"#\">Download</a><a href=\"#\">Reviews</a></nav><a class=\"ds-play\" href=\"#\">Play online</a></header>",
-      "css": ".ds-top { display: flex; align-items: center; gap: 28px; height: 64px; padding: 0 24px; background: rgba(9,11,31,0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--hairline, rgba(214,219,255,0.12)); } .ds-brand { color: var(--ink-strong, #f5f3ff); text-decoration: none; font: 900 1rem/1 Nunito, system-ui, sans-serif; letter-spacing: 0.06em; } .ds-brand b { color: var(--accent, #ffd36b); } .ds-nav { display: flex; gap: 24px; margin-left: auto; } .ds-nav a { color: var(--ink, #c8cbe8); text-decoration: none; font: 700 0.9rem/1 Nunito, system-ui, sans-serif; transition: color 160ms ease; } .ds-nav a:hover { color: var(--ink-strong, #f5f3ff); } .ds-nav a:focus-visible, .ds-play:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; border-radius: 6px; } .ds-play { padding: 10px 14px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 999px; color: var(--ink-strong, #f5f3ff); text-decoration: none; font: 700 0.9rem/1 Nunito, system-ui, sans-serif; transition: border-color 160ms ease; } .ds-play:hover { border-color: rgba(255,211,107,0.6); }"
+      "description": "Sticky glass header: Nova's helmet and the wordmark, chapter links with a growing gold underline, outlined Play online pill.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-helmet\" aria-hidden=\"true\"></span>LUNARCADE<b>HUB</b></a><nav class=\"ds-nav\"><a href=\"#\">The game</a><a href=\"#\">Download</a><a href=\"#\">Reviews</a><a href=\"#\">Install help</a></nav><a class=\"ds-play\" href=\"#\">Play online<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></a></header>",
+      "css": ".ds-top { display: flex; align-items: center; gap: 28px; height: 64px; padding: 0 24px; background: rgba(9,11,31,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--hairline, rgba(214,219,255,0.12)); } .ds-brand { display: flex; align-items: center; color: var(--ink-strong, #f5f3ff); text-decoration: none; font: 900 1.02rem/1 Nunito, system-ui, sans-serif; letter-spacing: 0.08em; } .ds-helmet { width: 30px; height: 26px; margin-right: 10px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #f5f3ff, #8a8eb6 70%); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45)); transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-brand b { margin-left: 0.4em; color: var(--accent, #ffd36b); } .ds-nav { display: flex; gap: 26px; margin-left: auto; } .ds-nav a { position: relative; padding: 6px 0; color: var(--ink, #c8cbe8); text-decoration: none; font: 700 0.9rem/1 Nunito, system-ui, sans-serif; transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; border-radius: 2px; background: var(--accent, #ffd36b); transform: scaleX(0); transform-origin: left; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-play { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); border-radius: 999px; color: var(--ink-strong, #f5f3ff); text-decoration: none; font: 700 0.9rem/1 Nunito, system-ui, sans-serif; transition: background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-play svg { width: 0.95em; height: 0.95em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-play:active { transform: scale(0.97); } @media (hover: hover) and (pointer: fine) { .ds-brand:hover .ds-helmet { transform: rotate(-8deg); } .ds-nav a:hover { color: var(--ink-strong, #f5f3ff); } .ds-nav a:hover::after { transform: scaleX(1); } .ds-play:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,211,107,0.55); } .ds-play:hover svg { transform: translate(2px, -2px); } } .ds-nav a:focus-visible, .ds-play:focus-visible, .ds-brand:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; border-radius: 8px; }"
+    },
+    {
+      "name": "Screenshot Reel",
+      "kind": "custom",
+      "refersTo": "screenshot-slide",
+      "description": "Signature: real screenshots in a scroll-snap reel; the current slide at full strength, neighbours dimmed, with a counter, progress bars and round arrows.",
+      "html": "<div class=\"ds-reel\"><div class=\"ds-track\"><figure class=\"ds-slide is-current\"><button class=\"ds-open\" type=\"button\" aria-label=\"View larger\"><span class=\"ds-shot\"></span><span class=\"ds-expand\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\"><polyline points=\"15 3 21 3 21 9\"/><polyline points=\"9 21 3 21 3 15\"/><line x1=\"21\" x2=\"14\" y1=\"3\" y2=\"10\"/><line x1=\"3\" x2=\"10\" y1=\"21\" y2=\"14\"/></svg></span></button><figcaption>The 3D simulator</figcaption></figure><figure class=\"ds-slide\"><button class=\"ds-open\" type=\"button\" aria-label=\"Show\"><span class=\"ds-shot\"></span></button><figcaption>Jump to answer</figcaption></figure></div><div class=\"ds-bar\"><p class=\"ds-count\"><b>1</b> / 2</p><div class=\"ds-dots\"><button type=\"button\" aria-current=\"true\" aria-label=\"Screen 1\"></button><button type=\"button\" aria-label=\"Screen 2\"></button></div><button class=\"ds-arrow\" type=\"button\" disabled aria-label=\"Previous screen\"><svg viewBox=\"0 0 24 24\"><path d=\"m15 18-6-6 6-6\"/></svg></button><button class=\"ds-arrow\" type=\"button\" aria-label=\"Next screen\"><svg viewBox=\"0 0 24 24\"><path d=\"m9 18 6-6-6-6\"/></svg></button></div></div>",
+      "css": ".ds-reel { max-width: 560px; } .ds-track { display: grid; grid-auto-flow: column; grid-auto-columns: 88%; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 4px 0 6px; border-radius: 16px; } .ds-slide { margin: 0; scroll-snap-align: start; } .ds-open { position: relative; display: block; width: 100%; padding: 0; border: 1px solid var(--hairline, rgba(214,219,255,0.12)); border-radius: 14px; overflow: hidden; background: var(--surface, #121534); cursor: zoom-in; box-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 22px 50px rgba(0,0,0,0.35); transform-origin: left center; transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1), opacity 450ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-shot { display: block; aspect-ratio: 1600 / 818; background: linear-gradient(160deg, #191d45, #090b1f); transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-expand { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(9,11,31,0.72); color: var(--ink-strong, #f5f3ff); opacity: 0; transform: scale(0.9); transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-expand svg, .ds-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; } .ds-slide:not(.is-current) .ds-open { opacity: 0.45; transform: scale(0.96); } .ds-open:active { transform: scale(0.99); } .ds-slide figcaption { margin-top: 12px; color: var(--ink-muted, #8a8eb6); font: 700 0.88rem/1.3 Nunito, system-ui, sans-serif; transition: color 300ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-slide.is-current figcaption { color: var(--ink-strong, #f5f3ff); } .ds-bar { display: flex; align-items: center; gap: 14px; margin-top: 14px; } .ds-count { margin: 0; min-width: 3.2em; color: var(--ink-muted, #8a8eb6); font: 800 0.85rem/1 Nunito, system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-count b { color: var(--ink-strong, #f5f3ff); } .ds-dots { display: flex; gap: 6px; flex: 1; } .ds-dots button { position: relative; width: 26px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; } .ds-dots button::before, .ds-dots button::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 3px; background: var(--hairline-strong, rgba(214,219,255,0.22)); } .ds-dots button::after { background: var(--accent, #ffd36b); transform: scaleX(0); transform-origin: left; transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-dots button[aria-current='true']::after { transform: scaleX(1); } .ds-arrow { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--hairline-strong, rgba(214,219,255,0.22)); background: transparent; color: var(--ink-strong, #f5f3ff); cursor: pointer; transition: background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-arrow:active { transform: scale(0.94); } .ds-arrow[disabled] { opacity: 0.3; cursor: default; } .ds-open:focus-visible, .ds-dots button:focus-visible, .ds-arrow:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } @media (hover: hover) and (pointer: fine) { .ds-slide.is-current .ds-open:hover { border-color: var(--hairline-strong, rgba(214,219,255,0.22)); } .ds-slide.is-current .ds-open:hover .ds-shot { transform: scale(1.015); } .ds-open:hover .ds-expand { opacity: 1; transform: scale(1); } .ds-slide:not(.is-current) .ds-open:hover { opacity: 0.7; } .ds-arrow:not([disabled]):hover { background: rgba(255,255,255,0.07); border-color: rgba(255,211,107,0.55); } }"
     },
     {
       "name": "Moon Phase Readout",
       "kind": "custom",
       "refersTo": "phase-readout",
       "description": "Signature: the day, lit fraction, cyan phase name and one-sentence fact under the live Moon, with the eight-phase dial.",
-      "html": "<div class=\"ds-readout\"><p class=\"ds-day\"><span>Day 15</span><span class=\"ds-lit\">100% lit</span></p><p class=\"ds-phase\">Full Moon</p><p class=\"ds-fact\">Earth sits between the Sun and the Moon, so we see the whole sunlit half.</p><div class=\"ds-dial\"><button aria-label=\"New Moon\"></button><button aria-label=\"First Quarter\"></button><button aria-label=\"Full Moon\" aria-current=\"true\"></button><button aria-label=\"Third Quarter\"></button></div></div>",
-      "css": ".ds-readout { width: min(100%, 440px); text-align: center; } .ds-readout p { margin: 0; } .ds-day { display: flex; justify-content: center; gap: 12px; font: 800 0.95rem/1 Nunito, system-ui, sans-serif; color: var(--ink-strong, #f5f3ff); font-variant-numeric: tabular-nums; } .ds-lit { color: var(--ink-muted, #8a8eb6); font-weight: 700; } .ds-phase { margin-top: 8px !important; font: 900 2rem/1.1 Nunito, system-ui, sans-serif; color: var(--cyan, #8fe3ff); letter-spacing: -0.01em; } .ds-fact { margin-top: 10px !important; color: var(--ink-muted, #8a8eb6); font: 400 0.95rem/1.55 'Nunito Text', Nunito, system-ui, sans-serif; text-wrap: balance; } .ds-dial { display: flex; justify-content: center; gap: 12px; margin-top: 18px; } .ds-dial button { width: 18px; height: 18px; padding: 0; border: 0; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #e9e4d6, #8a8578); opacity: 0.55; cursor: pointer; transition: opacity 200ms ease, transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-dial button:hover { opacity: 0.9; } .ds-dial button:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-dial button[aria-current='true'] { opacity: 1; transform: scale(1.18); box-shadow: 0 0 0 2px #090b1f, 0 0 0 3.5px #ffd36b; } .ds-dial button:active { transform: scale(0.92); }"
+      "html": "<div class=\"ds-readout\"><p class=\"ds-day\"><span>Day 15</span><span class=\"ds-lit\">100% lit</span></p><p class=\"ds-phase\">Full Moon</p><p class=\"ds-fact\">Earth sits between the Sun and the Moon.</p><ol class=\"ds-dial\"><li><button type=\"button\" data-label=\"New Moon\" aria-label=\"New Moon\"><i></i></button></li><li><button type=\"button\" data-label=\"First Quarter\" aria-label=\"First Quarter\"><i></i></button></li><li><button type=\"button\" data-label=\"Full Moon\" aria-label=\"Full Moon\" aria-current=\"true\"><i></i></button></li><li><button type=\"button\" data-label=\"Third Quarter\" aria-label=\"Third Quarter\"><i></i></button></li></ol></div>",
+      "css": ".ds-readout { width: min(100%, 420px); padding-top: 40px; text-align: center; } .ds-readout p { margin: 0; } .ds-day { display: flex; justify-content: center; align-items: baseline; gap: 12px; font: 800 0.92rem/1 Nunito, system-ui, sans-serif; color: var(--ink-strong, #f5f3ff); font-variant-numeric: tabular-nums; } .ds-lit { color: var(--ink-muted, #8a8eb6); font-weight: 700; } .ds-phase { margin-top: 8px !important; font: 900 1.9rem/1.1 Nunito, system-ui, sans-serif; color: var(--cyan, #8fe3ff); letter-spacing: -0.01em; } .ds-fact { margin-top: 8px !important; color: var(--ink-muted, #8a8eb6); font: 400 0.93rem/1.45 'Nunito Text', Nunito, system-ui, sans-serif; } .ds-dial { display: flex; justify-content: center; gap: 4px; margin: 18px 0 0; padding: 0; list-style: none; } .ds-dial button { position: relative; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; display: grid; place-items: center; } .ds-dial i { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #e9e6df, #2a2d4a); opacity: 0.5; transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-dial button[aria-current='true'] i { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 2px #090b1f, 0 0 0 3.5px #ffd36b; } .ds-dial button:active i { transform: scale(0.9); } .ds-dial button:focus-visible { outline: 2px solid var(--accent, #ffd36b); outline-offset: 3px; } .ds-dial button::after { content: attr(data-label); position: absolute; bottom: calc(100% + 6px); left: 50%; white-space: nowrap; pointer-events: none; padding: 5px 9px; border-radius: 8px; background: var(--surface-2, #191d45); border: 1px solid var(--hairline, rgba(214,219,255,0.12)); color: var(--ink-strong, #f5f3ff); font: 700 0.75rem/1 Nunito, system-ui, sans-serif; opacity: 0; transform: translate(-50%, 4px) scale(0.97); transform-origin: bottom center; transition: opacity 140ms cubic-bezier(0.23, 1, 0.32, 1), transform 140ms cubic-bezier(0.23, 1, 0.32, 1); } @media (hover: hover) and (pointer: fine) { .ds-dial button:hover i { opacity: 0.95; } .ds-dial button:hover::after { opacity: 1; transform: translate(-50%, 0) scale(1); transition-delay: 300ms; } }"
     }
   ],
   "narrative": {
     "northStar": "One Lunar Month",
-    "overview": "The site is a night sky that teaches. A live, photoreal Moon (NASA LRO colour map, Lommel-Seeliger shading, earthshine on the dark limb) is the only illustration, and it changes phase as the visitor moves through the page, so reading the page is the lesson the game teaches. Everything else steps back: deep indigo ground, hairline panels, real game screenshots without device chrome, and the game's own rounded Nunito set heavy for display.\n\nThe palette is the game's: night-sky indigo, moonlight gold, Nova's cyan. Gold is light, so it lands only where the page wants a hand to move (the primary download) and where the Moon is (the active phase). Cyan is the instrument colour and appears only in the phase readout. The mood is calm, clear and a little playful: a parent should feel reassured by plain facts; a ten-year-old should still feel the sky.\n\nDensity is low. Chapters are tall, single-column on the right, with generous vertical air between them; the left column holds the Moon pinned at a steady size. On phones the Moon becomes a slim pinned strip under the header so the month keeps turning while the content scrolls.",
+    "overview": "The site is a night sky that teaches. A live, photoreal Moon (NASA LRO colour map, Lommel-Seeliger shading, earthshine on the dark limb, a slow libration wobble) is the centre of every screen. At the top of the page it plays the whole month as a time-lapse, about 24 seconds a cycle; once the visitor scrolls, the scroll takes over and each chapter holds one of the eight phases, so reading the page is the lesson the game teaches. Nova, the game's astronaut, floats in front of the Moon as a 3D render from the game, and his helmet is the brand mark beside the wordmark. Everything else steps back: deep indigo ground, hairline panels, real game screenshots in swipeable reels, and the game's own rounded Nunito set heavy for display.\n\nThe palette is the game's: night-sky indigo, moonlight gold, Nova's cyan. Gold is light, so it fills only the control the page wants pressed and marks the active phase; elsewhere it appears as a thin line (focus, hover underlines, the reel's progress bar). Cyan is the instrument colour and appears only in the phase readout. The mood is calm, clear and a little playful: a parent should feel reassured by plain facts; a ten-year-old should still feel the sky. Copy is cut to short lines: one sentence under each heading, captions of two to four words.\n\nDensity is low. Chapters are tall, single-column on the right, with generous vertical air between them; the left column holds the Moon pinned at a steady size. On phones the Moon becomes a slim pinned strip at the top of the screen so the month keeps turning while the content scrolls, and Nova moves down to the closing chapter.",
     "keyCharacteristics": [
       "One dark indigo ground with a single faint cyan radial; no section background changes.",
-      "The live Moon is the hero and the only illustration; proof is real screenshots.",
-      "Gold is rationed to the primary action and the active phase.",
+      "The live Moon is the hero; the pictures are the Moon, Nova renders from the game, and real screenshots.",
+      "Gold fills are rationed to the primary action and the active phase; gold lines mark focus and hover.",
       "Hairline borders and tonal surfaces carry structure; shadows are reserved for things that float.",
-      "Nunito at 800-900 for every heading, label and control; Nunito Text 400/600 for reading.",
-      "Motion follows the Moon: eased, unhurried, and fully disabled under reduced motion."
+      "Nunito at 700-900 for every heading, label and control; Nunito Text 400/600 for reading.",
+      "Motion follows the Moon: a strong ease-out for responses, an ease-in-out for things drifting on their own, and nothing moves under reduced motion."
     ],
     "rules": [
-      { "name": "The Moonlight Rule", "body": "Gold is light, not decoration. It appears on the primary action, the active phase, focus, and the one panel the Moon lights. If a screen has two gold fills competing, one of them is wrong.", "section": "colors" },
-      { "name": "The Instrument Rule", "body": "Cyan belongs to the Moon readout. It never colours a button, link, heading or border.", "section": "colors" },
-      { "name": "The Scoped Signal Rule", "body": "Rose exists only inside reviews and green only for reassurance (safety facts, success). Neither becomes a general accent.", "section": "colors" },
-      { "name": "The Two Registers Rule", "body": "Nunito heavy for anything you scan or press; Nunito Text for anything you read. Never set a paragraph in 800, never set a button in 400.", "section": "typography" },
-      { "name": "The Real Numbers Rule", "body": "Every version, size, count, date and day number uses tabular numerals so live values from the release feed never shift the layout.", "section": "typography" },
-      { "name": "The Pinned Sky Rule", "body": "The Moon never scrolls away. On every width some form of it stays pinned and keeps reporting the day and phase.", "section": "layout" },
-      { "name": "The Tonal-First Rule", "body": "Panels are flat and outlined. A shadow means the object floats over the sky (a screenshot, the main action), never that a card is important.", "section": "elevation" }
+      {
+        "name": "The Moonlight Rule",
+        "body": "Gold is light, not decoration. A gold fill appears on the primary action and the active phase; gold lines appear on focus, hover underlines and the reel's progress. If a screen has two gold fills competing, one of them is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Instrument Rule",
+        "body": "Cyan belongs to the Moon readout. It never colours a button, link, heading or border.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoped Signal Rule",
+        "body": "Rose exists only inside reviews and green only for reassurance (safety facts, success). Neither becomes a general accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Registers Rule",
+        "body": "Nunito heavy for anything you scan or press; Nunito Text for anything you read. Never set a paragraph in 800, never set a button in 400.",
+        "section": "typography"
+      },
+      {
+        "name": "The Real Numbers Rule",
+        "body": "Every version, size, count, date, slide number and day number uses tabular numerals so live values never shift the layout.",
+        "section": "typography"
+      },
+      {
+        "name": "The Short Line Rule",
+        "body": "One sentence under a heading, two to four words under a screenshot. If a line needs a comma to keep going, cut it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Pinned Sky Rule",
+        "body": "The Moon never scrolls away. On every width some form of it stays pinned and keeps reporting the day and phase.",
+        "section": "layout"
+      },
+      {
+        "name": "The Tonal-First Rule",
+        "body": "Panels are flat and outlined. A shadow means the object floats over the sky (a screenshot, the main action, Nova), never that a card is important.",
+        "section": "elevation"
+      }
     ],
     "dos": [
       "**Do** keep the page on one indigo ground (#090b1f) and build hierarchy with Deep Orbit and High Orbit surfaces plus 1px hairlines.",
-      "**Do** spend gold only on the primary action, the active phase, focus and the moonlit download panel.",
+      "**Do** spend gold fills only on the primary action and the active phase; use gold lines for focus, hover underlines and progress.",
       "**Do** keep cyan inside the Moon readout.",
-      "**Do** set headings, buttons and labels in Nunito 800-900 and reading text in Nunito Text 400/600.",
-      "**Do** make every control a pill at least 40px tall (48px for buttons) with a visible 2px gold focus outline.",
-      "**Do** use tabular numerals for every version, size, date, count and day.",
-      "**Do** show the real game: native-aspect screenshots, 12px corners, the Float shadow, no device chrome.",
-      "**Do** ease motion with cubic-bezier(0.22, 1, 0.36, 1) or cubic-bezier(0.23, 1, 0.32, 1), keep presses at 120ms, and turn every entrance, reveal and swap off under prefers-reduced-motion."
+      "**Do** set headings, buttons and labels in Nunito 700-900 and reading text in Nunito Text 400/600.",
+      "**Do** make every text control a pill (50px buttons, 40px choice pills) and every icon-only control a circle, with a visible 2px gold focus outline.",
+      "**Do** use tabular numerals for every version, size, date, count, slide number and day.",
+      "**Do** show the real game: native-aspect screenshots in a reel, 14px corners, a hairline edge, the Float shadow, no device chrome.",
+      "**Do** keep copy to one short sentence per heading and two to four words per caption.",
+      "**Do** ease responses with cubic-bezier(0.23, 1, 0.32, 1) and on-screen drift with cubic-bezier(0.77, 0, 0.175, 1); press to 0.97 over 160ms; turn every entrance, reveal, drift and swap off under prefers-reduced-motion."
     ],
     "donts": [
       "**Don't** introduce a light theme or alternate section backgrounds; the sky is continuous.",
       "**Don't** use rose or green outside reviews and reassurance.",
-      "**Don't** add illustrations, stock imagery or device mockups; the Moon and real screenshots are the only pictures.",
+      "**Don't** add illustrations, stock imagery or device mockups; the pictures are the Moon, Nova renders from the game and real screenshots.",
       "**Don't** put shadows on panels or cards to signal importance.",
       "**Don't** invent ratings, counts or testimonials to fill an empty state; empty states say so plainly.",
       "**Don't** give hover effects to touch devices; hover rules sit behind `(hover: hover) and (pointer: fine)`."
