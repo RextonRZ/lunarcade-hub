@@ -1,9 +1,9 @@
 // Offline cache for the website and home-screen app. Generated into web/sw.js by tools/import-html.mjs.
 // CACHE (page, code) is renewed with every import; MEDIA (music, sounds, fonts) only when those files
 // change, so returning players don't download 15 MB of music again for a code-only update.
-const CACHE = 'lunarcade-2.9.7-d9337e6cf7';
+const CACHE = 'lunarcade-2.9.7-826839228b';
 const MEDIA = 'lunarcade-media-cce8d56fd6';
-const SHELL = ["./","index.html","manifest.webmanifest","css/app.css","css/fonts.css","js/app.js","js/config.js","js/fit-small-screens.js","js/moon-audio.js","js/moon-music296.js","js/online-leaderboard.js"];
+const SHELL = ["./","game","manifest.webmanifest","css/app.css","css/fonts.css","js/app.js","js/config.js","js/fit-small-screens.js","js/moon-audio.js","js/moon-music296.js","js/online-leaderboard.js"];
 const AUDIO = ["assets/audio/boost.wav","assets/audio/click.wav","assets/audio/collect.wav","assets/audio/collision.wav","assets/audio/concept.wav","assets/audio/correct.wav","assets/audio/dialogue.wav","assets/audio/engine.wav","assets/audio/finish.wav","assets/audio/hover.wav","assets/audio/incorrect.wav","assets/audio/jump.wav","assets/audio/menu.wav","assets/audio/quiz.wav","assets/audio/racer.wav","assets/audio/transition.wav","assets/audio/victory.wav","assets/music/A.mp3","assets/music/B.mp3","assets/music/C.mp3"];
 
 self.addEventListener('install', (event) => {

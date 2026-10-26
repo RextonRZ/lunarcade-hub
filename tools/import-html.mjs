@@ -110,15 +110,17 @@ const page = `<!doctype html><html lang="en"><head>${headMeta}
 <script src="js/fit-small-screens.js"></script>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/app.css">
-<script>if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !window.Capacitor) navigator.serviceWorker.register('sw.js');</script>
+<script>if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !(window.Capacitor || window.parent.Capacitor)) navigator.serviceWorker.register('sw.js');</script>
 </head><body>${bodyOut}</body></html>
 `;
-write('index.html', page);
+// index.html is hand-written: it fits game.html to every screen size and orientation.
+write('game.html', page);
 write('version.json', JSON.stringify({ version, importedFrom: source.split(/[\\/]/).pop(), importedAt: new Date().toISOString() }, null, 2) + '\n');
 
 // Offline cache for the home-screen app: the page shell, with a cache name unique to this import.
-const shell = ['./', 'index.html', 'manifest.webmanifest', 'css/app.css', 'css/fonts.css', ...readdirSync(join(web, 'js')).map((f) => 'js/' + f)];
-const build = version + '-' + hash(Buffer.from(page + css + readFileSync(join(web, 'js/app.js'), 'utf8')));
+// Page addresses as the website serves them: Cloudflare drops the .html ending.
+const shell = ['./', 'game', 'manifest.webmanifest', 'css/app.css', 'css/fonts.css', ...readdirSync(join(web, 'js')).map((f) => 'js/' + f)];
+const build = version + '-' + hash(Buffer.from(page + css + ['index.html', 'js/app.js', 'js/fit-small-screens.js'].map((f) => readFileSync(join(web, f), 'utf8')).join('')));
 write('sw.js', readFileSync(join(root, 'tools/sw-template.js'), 'utf8')
   .replace('__BUILD__', build)
   .replace('__MEDIA__', media.digest('hex').slice(0, 10))
