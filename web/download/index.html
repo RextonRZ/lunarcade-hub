@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Download LunarCade Hub · Explore the Moon. Play Among the Stars.</title>
+<meta name="description" content="LunarCade Hub turns Moon phases, a Year 5 Science topic, into a game. Download it for Windows or Android, or play online. English, Bahasa Melayu and Chinese.">
+<meta name="theme-color" content="#090b1f">
+<meta property="og:title" content="LunarCade Hub · Explore the Moon. Play Among the Stars.">
+<meta property="og:description" content="Moon phases for Year 5 Science, as a game. Windows, Android and web.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/concept-simulator.webp">
+<script>document.documentElement.className = 'js';</script>
+<link rel="icon" href="../icon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preload" href="img/moon-lroc-2k.webp" as="image" type="image/webp">
+<link rel="stylesheet" href="../css/fonts.css">
+<link rel="stylesheet" href="download.css">
+<script src="moon.js" defer></script>
+<script src="download.js" defer></script>
+</head>
+<body>
+<svg class="icons" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-windows" viewBox="0 0 24 24"><path d="M3 5.5 10.5 4.5v7H3zM12 4.3 21 3v8.5h-9zM3 12.5h7.5v7L3 18.5zM12 12.5h9V21l-9-1.3z"/></symbol>
+  <symbol id="i-android" viewBox="0 0 24 24"><path d="M5.5 10.5a6.5 6.5 0 0 1 13 0V17a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM8 4.5l1.6 2.4M16 4.5l-1.6 2.4M9.5 13.25h.01M14.5 13.25h.01M8.5 18v2.5M15.5 18v2.5"/></symbol>
+  <symbol id="i-browser" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M6.5 6.75h.01M9 6.75h.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.75" width="11" height="18.5" rx="2.75"/><path d="M10.5 18h3"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4.5" y="5" width="15" height="10.5" rx="1.5"/><path d="M2.5 19h19"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 6h9v9M18 6 6 18"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.4-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.8-7.5 10.2-7.5 10.2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <a class="brand" href="#new-moon" aria-label="LunarCade Hub, back to top">
+    <img src="img/nova.webp" alt="" width="32" height="32">
+    <span>LUNARCADE <b>HUB</b></span>
+  </a>
+  <nav aria-label="Page">
+    <a href="#waxing-crescent">The game</a>
+    <a href="#full-moon">Download</a>
+    <a href="#waning-gibbous">Reviews</a>
+    <a href="#third-quarter">Install help</a>
+  </nav>
+  <a class="play-link" href="../" target="_blank" rel="noopener">Play online<svg><use href="#i-out"/></svg><span class="sr-only"> (opens a new tab)</span></a>
+</header>
+
+<main id="main" class="month">
+  <aside class="sky" aria-label="The Moon tonight">
+    <div class="sky-inner">
+      <div class="moon-frame">
+        <canvas id="moon" width="560" height="560" role="img" aria-label="The Moon, changing phase as you scroll"></canvas>
+      </div>
+      <div class="readout" aria-live="polite">
+        <p class="readout-day"><span id="day-number">Day 1</span><span class="readout-lit" id="day-lit">0% lit</span></p>
+        <p class="readout-phase" id="phase-name">New Moon</p>
+        <p class="readout-fact" id="phase-fact">The Moon sits between Earth and the Sun, so its sunlit half faces away from us.</p>
+      </div>
+      <ol class="phases" aria-label="Jump to a phase"></ol>
+    </div>
+  </aside>
+
+  <div class="chapters">
+    <section class="chapter chapter-hero" id="new-moon" data-day="1" data-phase="New Moon"
+      data-fact="The Moon sits between Earth and the Sun, so its sunlit half faces away from us.">
+      <h1>Explore the Moon. <span class="lit">Play Among the Stars.</span></h1>
+      <p class="lede">LunarCade Hub turns Moon phases, a Year 5 Science topic, into a game. Pupils watch the Moon move in 3D, prove what they learned in a quiz and a space race, then draw every phase themselves. In English, Bahasa Melayu and <span class="nowrap" lang="zh">中文</span>.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/download/windows" data-dl="windows"><svg><use href="#i-windows"/></svg>Download for Windows</a>
+        <a class="btn btn-ghost" href="/download/android" data-dl="android"><svg><use href="#i-android"/></svg>Download for Android</a>
+      </div>
+      <p class="actions-alt">No download needed on iPhone or any computer: <a href="../" target="_blank" rel="noopener">play online in your browser<svg><use href="#i-out"/></svg></a></p>
+      <p class="facts"><span data-version>Version 2.9.7</span><span>Windows <span data-size="windows">131 MB</span></span><span>Android <span data-size="android">30 MB</span></span><span>Works offline</span></p>
+    </section>
+
+    <section class="chapter" id="waxing-crescent" data-day="4" data-phase="Waxing Crescent"
+      data-fact="A thin slice of the Moon's sunlit half turns towards Earth. It grows a little every night.">
+      <h2>Watch the Moon move.</h2>
+      <p>In the Concept Lab, Nova tells the story in eight short animated scenes: the Moon spinning on its axis, its journey around Earth, and why we always see the same side. Then pupils take over a 3D Sun, Earth and Moon, drag it around, and scrub through a whole month.</p>
+      <figure class="shots shots-pair">
+        <img class="shot shot-main" src="img/concept-simulator.webp" width="1280" height="654" loading="lazy" alt="Concept Lab simulator: the Sun, Earth and Moon in 3D with a lunar calendar of all eight phases">
+        <img class="shot shot-inset" src="img/concept-story.webp" width="1280" height="654" loading="lazy" alt="Concept Lab story scene: Nova explains that the Moon spins around its own axis">
+        <figcaption>Concept Lab: the story, then the 3D simulator.</figcaption>
+      </figure>
+    </section>
+
+    <section class="chapter" id="first-quarter" data-day="7.5" data-phase="First Quarter"
+      data-fact="Half of the disc is lit. The Moon has travelled a quarter of the way around Earth.">
+      <h2>Prove it in a game.</h2>
+      <p>The Astro-Jump Quiz is a platformer: jump into a gold block to open a question, five lives, no time limit. In Galactic Racer, every checkpoint shows a phase and a date, and pupils steer through the Moon picture that matches. Scores go on a shared live leaderboard under a nickname. Nobody needs an account.</p>
+      <figure class="shots shots-duo">
+        <img class="shot" src="img/quiz-play.webp" width="1280" height="654" loading="lazy" alt="Astro-Jump Quiz: Nova on a Moon platform under a gold question block">
+        <img class="shot" src="img/racer-play.webp" width="1280" height="654" loading="lazy" alt="Galactic Racer: a spaceship racing along a neon track on the Moon">
+        <figcaption>Astro-Jump Quiz and Galactic Racer.</figcaption>
+      </figure>
+    </section>
+
+    <section class="chapter" id="waxing-gibbous" data-day="11" data-phase="Waxing Gibbous"
+      data-fact="More than half of the disc is lit, and the bright part keeps growing.">
+      <h2>Draw it to own it.</h2>
+      <p>Interactive Notes go through the eight phases one at a time: where the Moon is, what we see from Earth, and roughly which day of the lunar month it is. In Draw the Moon, pupils paint the lit part of each phase and press Check Drawing to compare it with the real shape.</p>
+      <figure class="shots shots-pair shots-flip">
+        <img class="shot shot-main" src="img/notes-draw.webp" width="1280" height="654" loading="lazy" alt="Draw the Moon: a canvas to paint the New Moon with brush, eraser and Check Drawing">
+        <img class="shot shot-inset" src="img/notes-phases.webp" width="1280" height="654" loading="lazy" alt="Interactive Notes: the First Quarter, half of the Moon lit, approximately day 7 to 8">
+        <figcaption>Draw the Moon and Interactive Notes.</figcaption>
+      </figure>
+    </section>
+
+    <section class="chapter chapter-get" id="full-moon" data-day="15" data-phase="Full Moon"
+      data-fact="Earth sits between the Sun and the Moon, so we see the whole sunlit half.">
+      <h2>Get LunarCade Hub.</h2>
+      <p>The apps hold the whole game, so they play with no internet at all. Scores upload to the leaderboard the next time the device is online.</p>
+      <div class="get">
+        <article class="get-main">
+          <div class="get-head"><svg><use href="#i-laptop"/></svg><h3>Windows</h3></div>
+          <dl class="spec">
+            <div><dt>Version</dt><dd data-version-num>2.9.7</dd></div>
+            <div><dt>Download</dt><dd data-size="windows">131 MB</dd></div>
+            <div><dt>Needs</dt><dd>Windows 10 or 11, 64-bit</dd></div>
+          </dl>
+          <a class="btn btn-primary" href="/download/windows" data-dl="windows"><svg><use href="#i-down"/></svg>Download for Windows</a>
+          <p class="get-note" data-file="windows">LunarCade-2.9.7-windows.exe</p>
+        </article>
+        <article class="get-side">
+          <div class="get-head"><svg><use href="#i-android"/></svg><h3>Android</h3></div>
+          <dl class="spec">
+            <div><dt>Download</dt><dd data-size="android">30 MB</dd></div>
+            <div><dt>Needs</dt><dd>Android 7.0 or newer</dd></div>
+          </dl>
+          <a class="btn btn-ghost" href="/download/android" data-dl="android"><svg><use href="#i-down"/></svg>Download APK</a>
+        </article>
+        <article class="get-side">
+          <div class="get-head"><svg><use href="#i-browser"/></svg><h3>iPhone, iPad and any browser</h3></div>
+          <p>Nothing to install. On iPhone, open it in Safari, tap Share, then Add to Home Screen to keep Nova one tap away.</p>
+          <a class="btn btn-ghost" href="../" target="_blank" rel="noopener"><svg><use href="#i-out"/></svg>Play online</a>
+        </article>
+      </div>
+      <p class="get-mac" hidden>Using a Mac? <a href="/download/mac" data-dl="mac">Download for macOS</a></p>
+    </section>
+
+    <section class="chapter" id="waning-gibbous" data-day="18.5" data-phase="Waning Gibbous"
+      data-fact="The lit part starts to shrink. The Moon now rises later each night.">
+      <h2>What families and teachers say.</h2>
+      <div class="reviews" id="reviews">
+        <div class="reviews-summary" id="reviews-summary" hidden>
+          <p class="avg"><span id="reviews-avg">0</span><span class="hearts" id="reviews-avg-hearts" aria-hidden="true"></span></p>
+          <p class="avg-note" id="reviews-count"></p>
+        </div>
+        <p class="reviews-empty" id="reviews-empty">No reviews yet. Played it at home or in class? Tell other parents and teachers how it went.</p>
+        <ol class="review-list" id="review-list"></ol>
+        <button class="more" id="reviews-more" type="button" hidden></button>
+        <p class="reviews-error" id="reviews-error" role="alert" hidden>Reviews could not load. Check your connection and try again.</p>
+
+        <form class="review-form" id="review-form" novalidate>
+          <h3>Leave a review</h3>
+          <p class="form-note">Reviews are public and pupils read them too. Use a nickname, not your full name.</p>
+          <div class="field">
+            <label for="rv-name">Nickname</label>
+            <input id="rv-name" name="name" maxlength="20" autocomplete="nickname" required>
+          </div>
+          <fieldset class="field">
+            <legend>I am a</legend>
+            <div class="pills">
+              <label><input type="radio" name="role" value="parent" required><span>Parent</span></label>
+              <label><input type="radio" name="role" value="teacher"><span>Teacher</span></label>
+              <label><input type="radio" name="role" value="pupil"><span>Pupil</span></label>
+              <label><input type="radio" name="role" value="other"><span>Other</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="field">
+            <legend>How much do you love it?</legend>
+            <div class="heart-pick" id="heart-pick">
+              <label><input type="radio" name="hearts" value="1" required><svg><use href="#i-heart"/></svg><span class="sr-only">1 heart</span></label>
+              <label><input type="radio" name="hearts" value="2"><svg><use href="#i-heart"/></svg><span class="sr-only">2 hearts</span></label>
+              <label><input type="radio" name="hearts" value="3"><svg><use href="#i-heart"/></svg><span class="sr-only">3 hearts</span></label>
+              <label><input type="radio" name="hearts" value="4"><svg><use href="#i-heart"/></svg><span class="sr-only">4 hearts</span></label>
+              <label><input type="radio" name="hearts" value="5"><svg><use href="#i-heart"/></svg><span class="sr-only">5 hearts</span></label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="rv-body">Your review</label>
+            <textarea id="rv-body" name="body" rows="4" maxlength="300" required placeholder="What did your child or class enjoy? What did they learn?"></textarea>
+            <p class="counter"><span id="rv-count">0</span>/300</p>
+          </div>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button class="btn btn-primary" type="submit" id="rv-submit">Post review</button>
+          <p class="form-ok" id="form-ok" role="status" hidden>Thank you. Your review is up.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="chapter" id="third-quarter" data-day="22.5" data-phase="Third Quarter"
+      data-fact="Half of the disc is lit again, the other half this time.">
+      <h2>Installing, without surprises.</h2>
+      <p>The apps are not from an app store, so your device asks you to confirm once. This is what you will see.</p>
+      <div class="steps">
+        <div class="step">
+          <h3><svg><use href="#i-laptop"/></svg>Windows</h3>
+          <ol>
+            <li>Open the downloaded <b>LunarCade-…-windows.exe</b>.</li>
+            <li>If Windows says “Windows protected your PC”, choose <b>More info</b>, then <b>Run anyway</b>. It shows this for apps that are not code-signed.</li>
+            <li>Follow the setup, then open LunarCade from the Start menu.</li>
+          </ol>
+        </div>
+        <div class="step">
+          <h3><svg><use href="#i-android"/></svg>Android</h3>
+          <ol>
+            <li>Open the downloaded <b>.apk</b> from your notifications or Files.</li>
+            <li>When asked, allow installs from your browser or Files app. You can turn this off again afterwards.</li>
+            <li>Tap <b>Install</b>, then open LunarCade. Later versions install over it and keep progress.</li>
+          </ol>
+        </div>
+        <div class="step">
+          <h3><svg><use href="#i-phone"/></svg>iPhone and iPad</h3>
+          <ol>
+            <li>Open the website in Safari.</li>
+            <li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li>
+            <li>It opens full screen and keeps working offline after the first visit.</li>
+          </ol>
+        </div>
+      </div>
+      <ul class="safe">
+        <li><svg><use href="#i-check"/></svg>No account and no email. Players choose a nickname for the leaderboard.</li>
+        <li><svg><use href="#i-check"/></svg>No ads and nothing to buy.</li>
+        <li><svg><use href="#i-check"/></svg>Every screen in English, Bahasa Melayu and <span class="nowrap" lang="zh">中文</span>.</li>
+      </ul>
+    </section>
+
+    <section class="chapter chapter-close" id="waning-crescent" data-day="26" data-phase="Waning Crescent"
+      data-fact="A last thin slice before the Moon goes dark again and a new month begins.">
+      <h2>See you at the next new Moon.</h2>
+      <p>Twenty nine and a half days from new Moon to new Moon. LunarCade Hub covers every one of them.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/download/windows" data-dl="windows"><svg><use href="#i-windows"/></svg>Download for Windows</a>
+        <a class="btn btn-ghost" href="/download/android" data-dl="android"><svg><use href="#i-android"/></svg>Download for Android</a>
+        <a class="btn btn-text" href="../" target="_blank" rel="noopener">Play online<svg><use href="#i-out"/></svg></a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <p class="foot-brand">LUNARCADE <b>HUB</b><span>Explore. Learn. Play.</span></p>
+  <nav aria-label="Footer"><a href="../" target="_blank" rel="noopener">Play online</a><a href="#full-moon">Download</a><a href="#third-quarter">Install help</a></nav>
+  <p class="foot-credit">Moon surface: NASA / GSFC / Arizona State University, Lunar Reconnaissance Orbiter.</p>
+</footer>
+</body>
+</html>

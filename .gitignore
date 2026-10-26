@@ -6,3 +6,9 @@ dist/
 # Original single-file exports from ChatGPT (33 MB each). Keep them locally; web/ is what ships.
 /*.html
 /originals/
+
+# Design review captures and mockups (regenerated on demand)
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/build/
+.impeccable/questions/
