@@ -6,7 +6,7 @@
 
 Follow Nova the astronaut through animated lessons, a 3D Sun–Earth–Moon simulator, a jump-and-answer quiz, a neon space race and a Moon-drawing studio. English, Bahasa Melayu and 中文. Plays in the browser, on desktop and on Android, online or offline.
 
-**[Play it live](https://lunarcade.lunarcadehub.workers.dev)** · **[Download for Windows, Mac and Android](https://github.com/RextonRZ/lunarcade-hub/releases/latest)**
+**[Play it live](https://lunarcade.lunarcadehub.workers.dev)** · **[Download for Windows and Android](https://lunarcade.lunarcadehub.workers.dev/download/)**
 
 </div>
 
@@ -82,10 +82,10 @@ So LunarCade turns the lesson into a hub of four activities. You watch it, you e
 |---|---|---|
 | **Browser** | Open the [live site](https://lunarcade.lunarcadehub.workers.dev) | Yes, after the first visit (music and sounds included) |
 | **iPhone / iPad** | Safari → Share → **Add to Home Screen** | Yes, after the first visit |
-| **Android app** | Install the `.apk` from [Releases](https://github.com/RextonRZ/lunarcade-hub/releases/latest). Always landscape, full screen | Yes, everything is built in |
+| **Android app** | Install the `.apk` from the [download page](https://lunarcade.lunarcadehub.workers.dev/download/). Always landscape, full screen. Android 7.0 or newer | Yes, everything is built in |
 | **Android browser** | Chrome → **Install app**. The first tap goes full screen and locks landscape | Yes, after the first visit |
-| **Windows** | `LunarCade Setup.exe` from [Releases](https://github.com/RextonRZ/lunarcade-hub/releases/latest) | Yes, everything is built in |
-| **macOS** | `.dmg` from [Releases](https://github.com/RextonRZ/lunarcade-hub/releases/latest) | Yes, everything is built in |
+| **Windows** | `LunarCade-<version>-windows.exe` from the [download page](https://lunarcade.lunarcadehub.workers.dev/download/). Windows 10 or 11, 64-bit | Yes, everything is built in |
+| **macOS** | `.dmg` from [Releases](https://github.com/RextonRZ/lunarcade-hub/releases/latest), when a release includes one | Yes, everything is built in |
 
 Offline players keep a local leaderboard on their device. Their best results upload by themselves the next time they are online.
 
@@ -104,7 +104,8 @@ One set of game files in `web/` ships everywhere. Each platform only adds a thin
 | **Screen fit** (`web/index.html`) | Runs the game in a frame that is always landscape and at least 900 × 520, scaled down to fit the screen and turned sideways on upright phones. The browser maps touches into the turned frame, so the game needs no changes. |
 | **Phone tweaks** (`web/js/fit-small-screens.js`) | Caps the render resolution on phones, forwards full screen to the outer page, and locks landscape in mobile browsers on the first tap. |
 | **Desktop app** (`desktop/`) | An Electron window around `web/game.html`, never smaller than 900 × 520. It runs offline from the bundled files and talks to the same leaderboard. |
-| **Android app** (`android/`) | A Capacitor project, locked to landscape and immersive full screen, with the Nova launcher icon and launch screen. |
+| **Android app** (`android/`) | A Capacitor project, locked to landscape and immersive full screen, with the Nova launcher icon and launch screen. Signed with one permanent key, so every version installs over the last. |
+| **Download page** (`web/download/`) | A lunar month in one scroll: a live WebGL Moon (NASA LRO surface map) waxes and wanes as the page scrolls, with the downloads at Full Moon and real reviews. |
 
 ```mermaid
 flowchart LR
@@ -122,12 +123,19 @@ flowchart LR
     W <--> DB
 ```
 
-**Leaderboard API**
+**API**
 
 | Endpoint | Purpose |
 |---|---|
 | `GET /api/leaderboard` | Top 50 per category: quiz standard/extended, plus every racer mode × reading pace × acceleration |
 | `POST /api/score` | Submit a finished run. It is stored only if it beats that nickname's current best for the category |
+| `GET /api/release` | Version, file names and sizes of the latest GitHub release (cached 10 minutes) |
+| `GET /download/windows` · `/android` · `/mac` | Redirect to that file in the latest GitHub release |
+| `GET /api/reviews` | The 60 newest visible reviews, with the count and average hearts |
+| `POST /api/reviews` | Post a review: nickname, role, 1 to 5 hearts, 10 to 300 characters. Links and rude words are refused; three a day per visitor |
+| `POST /api/reviews/:id/love` | Love a review, once per visitor |
+
+To take a review down: `npx wrangler d1 execute lunarcade --remote --command "UPDATE reviews SET hidden = 1 WHERE id = 12"`
 
 ---
 
@@ -158,7 +166,7 @@ npm run dev          # game + leaderboard API + local database at http://localho
 ```bash
 npx wrangler login
 npx wrangler d1 create lunarcade      # paste the printed database_id into wrangler.jsonc
-npm run db:setup                      # create the leaderboard table
+npm run db:setup                      # create the leaderboard and review tables (safe to rerun)
 npm run deploy                        # prints https://lunarcade.<subdomain>.workers.dev
 ```
 
@@ -177,7 +185,19 @@ git tag v2.9.7
 git push origin v2.9.7
 ```
 
+The download page picks up the new release by itself within 10 minutes: version, sizes and links.
+
 Desktop builds are not code-signed yet. Windows shows "Windows protected your PC" (**More info → Run anyway**), and macOS needs right-click → **Open** the first time.
+
+**Android signing key.** Every APK must be signed with the same key, or players cannot update without uninstalling and losing their progress. The key lives outside the repo in `~/.lunarcade-keys/` (`lunarcade-release.jks` and `keystore.properties`); local release builds use it automatically (`cd android && ./gradlew assembleRelease`). **Back up that folder somewhere safe; if it is lost, no future version can update existing installs.** GitHub Actions needs it as two repository secrets, set once:
+
+```bash
+base64 -w0 ~/.lunarcade-keys/lunarcade-release.jks | gh secret set ANDROID_KEYSTORE_BASE64
+grep storePassword ~/.lunarcade-keys/keystore.properties | cut -d= -f2 | tr -d '
+' | gh secret set ANDROID_KEYSTORE_PASSWORD
+```
+
+Without those secrets the Android job stops instead of publishing an unsigned APK.
 
 ---
 
@@ -204,6 +224,7 @@ web/                 the game as served to players
   js/online-leaderboard.js                  online leaderboard bridge
   js/fit-small-screens.js                   phone render cap, full screen, landscape lock
   manifest.webmanifest, sw.js, icon*.png    installable app + offline cache
+  download/                                 download page: live Moon, downloads, reviews
 worker/              Cloudflare Worker (leaderboard API) and D1 schema
 desktop/             Electron main process
 android/             Capacitor Android project
